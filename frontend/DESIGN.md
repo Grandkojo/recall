@@ -5,7 +5,6 @@ description: A calm, white-canvas interface for Recall — a dementia care life 
 
 colors:
   primary: "#2D7DD2"
-  
   primary-active: "#1A5FA8"
   primary-disabled: "#B8D4EE"
   ink: "#0D1B2A"
@@ -558,7 +557,7 @@ When photography is used (rare — mostly testimonials), avatars crop to perfect
 - Connector tile entire card area is tappable; effective tap area >> 44px.
 
 ### Collapsing Strategy
-- Top nav collapses to hamburger at < 768px; menu opens as a full-screen cream sheet.
+- Top nav collapses to hamburger at < 768px; menu opens as a full-screen canvas sheet.
 - Hero band's 6-6 grid collapses to single-column on mobile — h1 + sub-head + buttons first, then the illustration / mockup card below.
 - Feature grids reduce columns rather than scaling cards down.
 - Pricing tier cards collapse 4 → 2 → 1; featured-tier dark surface stays visually distinct at every breakpoint.
@@ -576,14 +575,13 @@ When photography is used (rare — mostly testimonials), avatars crop to perfect
 3. Use `{token.refs}` everywhere — never inline hex.
 4. Never document hover. Default and Active/Pressed states only.
 5. Display headlines stay Copernicus serif 400 with negative tracking. Body stays StyreneB / Inter 400. The split is unbreakable.
-6. Cream + coral + dark navy is the trinity. Don't introduce a fourth surface tone (no purple cards, no green sections).
+6. White canvas + sky blue + midnight blue is the trinity. Don't introduce a fourth surface tone (no purple cards, no warm-beige sections).
 7. When in doubt about emphasis: bigger Copernicus serif before bolder weight.
 
 ## Known Gaps
 
-- Copernicus and StyreneB are licensed Anthropic typefaces and not available as public web fonts. Substitutes (Tiempos Headline / Cormorant Garamond / EB Garamond for serif; Inter / Söhne for sans) are documented in the typography section.
-- The Anthropic radial-spike-mark is a brand glyph rendered as inline SVG; it's not formalized as a system token here. Treat it as a logo asset.
-- Animation and transition timings (chat message reveal, code block typewriter effect on the homepage, agentic-flow diagram animations) are not in scope.
-- Form validation states beyond `{component.text-input-focused}` are not extracted — error / success states would need a sign-up or feedback flow to confirm.
-- The actual Claude product surface (claude.ai chat interface) shares some tokens with the marketing site but adds many product-specific components (chat bubbles, message tools, file upload chips, conversation history sidebar) that are out of scope for this marketing-surface document.
-- The "agent" / "computer use" demo cards on certain pages display animated Claude controlling a browser — the static screenshot doesn't fully capture the animation chrome.
+- Copernicus and StyreneB are not available as free web fonts. Substitutes (Tiempos Headline / Cormorant Garamond / EB Garamond for serif; Inter / Söhne for sans) are documented in the typography section. Use Google Fonts' **Cormorant Garamond** as the open-source substitute for display headlines.
+- The Recall wordmark/logo is not yet formalized as a system token. Treat it as a logo asset.
+- Animation and transition timings (memory card reveal, voice waveform animation) are not in scope for this document.
+- Form validation states beyond `{component.text-input-focused}` are not extracted — error / success states would need a sign-up or upload flow to confirm.
+- Patient-facing voice input UI (waveform visualizer, speaking state) and caregiver media upload progress states are product-specific components not yet in this document.

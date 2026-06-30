@@ -26,6 +26,9 @@ importers:
       gsap:
         specifier: ^3.15.0
         version: 3.15.0
+      landing-effects:
+        specifier: ^0.1.1
+        version: 0.1.1
       react:
         specifier: ^19.2.7
         version: 19.2.7
@@ -933,6 +936,9 @@ packages:
 
   keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==}
+
+  landing-effects@0.1.1:
+    resolution: {integrity: sha512-racPwT7CZurXXiznWm/N3uilL7svF2xfP65XJONuc5PTBRiACX0JyxeiEMfaia7wqwE7xaKg6e/V40dHUX++dw==}
 
   levn@0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
@@ -2112,6 +2118,8 @@ snapshots:
   keyv@4.5.4:
     dependencies:
       json-buffer: 3.0.1
+
+  landing-effects@0.1.1: {}
 
   levn@0.4.1:
     dependencies:

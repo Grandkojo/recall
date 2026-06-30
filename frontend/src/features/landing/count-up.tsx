@@ -34,7 +34,9 @@ export function CountUp({ value }: CountUpProps) {
         if (numRef.current) numRef.current.textContent = String(Math.round(obj.n));
       },
     });
-    return () => tween.kill();
+    return () => {
+      tween.kill();
+    };
   }, [inView, target]);
 
   if (target === null) return <span ref={ref}>{value}</span>;

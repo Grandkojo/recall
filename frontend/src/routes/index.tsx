@@ -1,8 +1,8 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { RootLayout } from '../components/layout/RootLayout';
 import { Landing } from '../pages/Landing';
-import { LoginPage } from '../pages/caregiver/login';
-import { SignupPage } from '../pages/caregiver/signup';
+import { LoginPage } from '../pages/auth/login';
+import { SignupPage } from '../pages/auth/signup';
 import { NotFound } from '../pages/not-found';
 
 export const router = createBrowserRouter([

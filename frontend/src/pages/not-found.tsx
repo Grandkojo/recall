@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { btnCls } from '../components/ui';
 
-export function NotFound(): JSX.Element {
+export function NotFound() {
   return (
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-canvas px-6 text-center">
       <p className="text-7xl font-bold tracking-tight text-ink md:text-8xl">404</p>

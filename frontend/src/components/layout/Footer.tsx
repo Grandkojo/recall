@@ -34,7 +34,7 @@ const COLUMNS: FooterColumn[] = [
   },
 ];
 
-export function Footer(): JSX.Element {
+export function Footer() {
   return (
     <footer className="border-t border-line bg-canvas">
       <Container>

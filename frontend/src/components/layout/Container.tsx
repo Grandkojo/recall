@@ -11,7 +11,7 @@ interface ContainerProps {
  * Every section wraps its content in <Container> so left/right spacing
  * is identical across the whole landing page.
  */
-export function Container({ children, className = '' }: ContainerProps): JSX.Element {
+export function Container({ children, className = '' }: ContainerProps) {
   return (
     <div className={`mx-auto w-full max-w-[1200px] px-6 lg:px-8 ${className}`}>
       {children}

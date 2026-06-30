@@ -31,6 +31,13 @@ export interface Feature {
   body: string;
 }
 
+export interface StackLayer {
+  index: string;
+  name: string;
+  blurb: string;
+  accent?: boolean;
+}
+
 export interface LandingContent {
   hero: HeroContent;
   stats: Stat[];
@@ -45,6 +52,12 @@ export interface LandingContent {
     heading: string;
     subheading: string;
     items: Feature[];
+  };
+  stack: {
+    eyebrow: string;
+    heading: string;
+    subheading: string;
+    layers: StackLayer[];
   };
   cta: {
     heading: string;
@@ -117,6 +130,20 @@ export const landingContent: LandingContent = {
         title: 'Private by design',
         body: "Each person's memories are theirs alone — invite-only, never shared, never sold",
       },
+    ],
+  },
+
+  stack: {
+    eyebrow: 'The memory stack',
+    heading: 'Five layers, one living memory',
+    subheading:
+      'Every memory passes through the same pipeline — and the graph is where it all comes together',
+    layers: [
+      { index: '01', name: 'Capture', blurb: 'Photos, voice notes, videos and stories come in from the whole family' },
+      { index: '02', name: 'Transcribe', blurb: 'Whisper turns every voice and video into searchable, gentle text' },
+      { index: '03', name: 'Memory Graph', blurb: 'Cognee links people, places and moments into one connected graph', accent: true },
+      { index: '04', name: 'Enrich', blurb: 'Background passes link the same person and place across hundreds of memories' },
+      { index: '05', name: 'Recall', blurb: 'A question or a tap surfaces the right memory, in their own words' },
     ],
   },
 

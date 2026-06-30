@@ -1,8 +1,9 @@
 import { Container } from '../../components/layout/Container';
 import { landingContent } from '../../lib/landing-content';
+import { useInView } from '../../hooks/use-in-view';
 import { SectionHeading } from './section-heading';
 
-const ICONS: JSX.Element[] = [
+const ICONS = [
   // Orientation brief — document with lines
   <>
     <rect x="4" y="3" width="16" height="18" />
@@ -25,8 +26,10 @@ const ICONS: JSX.Element[] = [
   </>,
 ];
 
-export function FeaturesSection(): JSX.Element {
+export function FeaturesSection() {
   const { features } = landingContent;
+  const { ref, inView } = useInView<HTMLDivElement>();
+
   return (
     <section id="for-families" className="border-b border-line bg-surface py-20 md:py-28">
       <Container>
@@ -37,10 +40,14 @@ export function FeaturesSection(): JSX.Element {
         />
 
         {/* Per-cell border-r/border-b makes a clean grid at any column count */}
-        <div className="mt-14 grid border-l border-t border-line bg-canvas sm:grid-cols-2 lg:grid-cols-4">
+        <div ref={ref} className="mt-14 grid border-l border-t border-line bg-canvas sm:grid-cols-2 lg:grid-cols-4">
           {features.items.map((feature, i) => (
-            <article key={feature.title} className="group border-b border-r border-line p-8">
-              <span className="inline-flex h-11 w-11 items-center justify-center border border-line-strong text-primary transition-colors group-hover:border-primary group-hover:bg-primary group-hover:text-white">
+            <article
+              key={feature.title}
+              className={`group relative overflow-hidden border-b border-r border-line p-8 transition-colors hover:bg-surface ${inView ? 'animate-rise' : 'opacity-0'}`}
+              style={{ animationDelay: `${i * 0.1}s` }}
+            >
+              <span className="inline-flex h-11 w-11 items-center justify-center border border-line-strong text-primary transition-colors duration-200 group-hover:border-primary group-hover:bg-primary group-hover:text-white">
                 <svg
                   width="22"
                   height="22"
@@ -57,6 +64,9 @@ export function FeaturesSection(): JSX.Element {
               </span>
               <h3 className="mt-6 text-lg font-bold tracking-tight text-ink">{feature.title}</h3>
               <p className="mt-2 text-[15px] font-medium leading-relaxed text-body">{feature.body}</p>
+
+              {/* accent line grows on hover */}
+              <span className="absolute bottom-0 left-0 h-[3px] w-0 bg-primary transition-[width] duration-300 ease-out group-hover:w-full" />
             </article>
           ))}
         </div>

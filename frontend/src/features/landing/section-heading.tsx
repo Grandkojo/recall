@@ -5,7 +5,7 @@ interface SectionHeadingProps {
 }
 
 /** Shared section header: technical eyebrow + bold heading. */
-export function SectionHeading({ eyebrow, heading, subheading }: SectionHeadingProps): JSX.Element {
+export function SectionHeading({ eyebrow, heading, subheading }: SectionHeadingProps) {
   return (
     <div className="max-w-2xl">
       <span className="inline-flex items-center gap-2.5 text-[12px] font-semibold uppercase tracking-[0.18em] text-primary">

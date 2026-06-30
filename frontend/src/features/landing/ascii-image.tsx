@@ -9,15 +9,13 @@ interface AsciiImageProps {
   fontSize?: number;
   parallaxStrength?: number;
   scale?: number;
+  brightnessBoost?: number;
 }
 
 /**
  * Renders a photo as live, blue-tinted ASCII art (WebGL) with mouse parallax,
  * a reveal sweep and glitch bands — the supermemory image treatment, via the
  * landing-effects package. Sits over a dark panel so the glyphs glow.
- *
- * The renderer reads its display box from getBoundingClientRect(), so the
- * parent must give this canvas a real CSS size (e.g. an aspect-ratio box).
  * Falls back to a plain <img> when the user prefers reduced motion.
  */
 export function AsciiImage({
@@ -27,7 +25,8 @@ export function AsciiImage({
   fontSize = 8,
   parallaxStrength = 7,
   scale = 1.18,
-}: AsciiImageProps): JSX.Element {
+  brightnessBoost = 2.2,
+}: AsciiImageProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [reduced] = useState<boolean>(
     () =>
@@ -48,19 +47,20 @@ export function AsciiImage({
         fontSize,
         parallaxStrength,
         scale,
+        brightnessBoost,
       });
     } catch {
       /* WebGL unavailable — the dark panel + reduced-motion img cover this */
     }
     return () => cleanup?.();
-  }, [src, reduced, fontSize, parallaxStrength, scale]);
+  }, [src, reduced, fontSize, parallaxStrength, scale, brightnessBoost]);
 
   if (reduced) {
     return (
       <img
         src={src}
         alt={alt}
-        className={`h-full w-full object-cover opacity-90 ${className}`}
+        className={`h-full w-full object-cover ${className}`}
         draggable={false}
       />
     );

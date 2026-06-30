@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-export function LoginPage(): JSX.Element {
+export function LoginPage() {
   return (
     <div className="flex min-h-svh flex-col items-center justify-center gap-4 bg-canvas px-6 pt-16 text-center">
       <span className="text-[12px] font-semibold uppercase tracking-[0.18em] text-primary">Sign in</span>

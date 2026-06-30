@@ -15,7 +15,7 @@ const NAV_LINKS: NavLink[] = [
   { label: 'About', href: '#about' },
 ];
 
-export function Navbar(): JSX.Element {
+export function Navbar() {
   const [scrolled, setScrolled] = useState<boolean>(false);
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const { pathname } = useLocation();

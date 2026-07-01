@@ -1,0 +1,5 @@
+MemoraBridge_ProjectPlan.docx
+backend/.env
+backend/venv
+backend/venv/*
+recall_postman_collection.json

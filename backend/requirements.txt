@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+sqlalchemy
+psycopg2-binary
+alembic
+cognee
+celery
+redis
+firebase-admin
+cloudinary
+openai
+python-multipart
+python-jose[cryptography]
+passlib[bcrypt]
+pydantic-settings

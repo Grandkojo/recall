@@ -3,3 +3,7 @@ backend/.env
 backend/venv
 backend/venv/*
 recall_postman_collection.json
+
+
+frontend/node_modules
+frontend/package-lock.json

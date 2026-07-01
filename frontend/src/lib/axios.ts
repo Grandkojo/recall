@@ -1,37 +1,53 @@
-import axios from 'axios';
+import axios, { type InternalAxiosRequestConfig } from 'axios';
+import { auth } from './firebase';
+
+/**
+ * Backend base URL. The Recall backend serves under /api/... on port 8001
+ * (see backend/readme.md). Override with VITE_API_URL for other environments.
+ */
+export const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:8001';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:8000',
+  baseURL: API_BASE_URL,
   headers: { 'Content-Type': 'application/json' },
   timeout: 30_000,
 });
 
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('access_token');
-  if (token) config.headers.Authorization = `Bearer ${token}`;
+type RetriableConfig = InternalAxiosRequestConfig & { _retry?: boolean };
+
+/**
+ * Attach the current Firebase ID token to every request. The SDK returns a
+ * cached token and transparently refreshes it when it's close to expiry, so
+ * there is no separate refresh-token flow to manage.
+ */
+api.interceptors.request.use(async (config) => {
+  const user = auth.currentUser;
+  if (user) {
+    const token = await user.getIdToken();
+    config.headers.Authorization = `Bearer ${token}`;
+  }
   return config;
 });
 
+/**
+ * On a 401, force-refresh the ID token once and retry — covers the case where
+ * a cached token expired mid-session. If the forced refresh still fails, the
+ * session is genuinely invalid and the AuthProvider will react to sign-out.
+ */
 api.interceptors.response.use(
   (res) => res,
   async (error) => {
-    const original = error.config;
-    if (error.response?.status === 401 && !original._retry) {
+    const original = error.config as RetriableConfig | undefined;
+    const user = auth.currentUser;
+
+    if (error.response?.status === 401 && original && !original._retry && user) {
       original._retry = true;
-      const refresh = localStorage.getItem('refresh_token');
-      if (refresh) {
-        try {
-          const { data } = await axios.post(
-            `${import.meta.env.VITE_API_URL ?? 'http://localhost:8000'}/auth/refresh`,
-            { refresh_token: refresh }
-          );
-          localStorage.setItem('access_token', data.access_token);
-          original.headers.Authorization = `Bearer ${data.access_token}`;
-          return api(original);
-        } catch {
-          localStorage.clear();
-          window.location.href = '/login';
-        }
+      try {
+        const token = await user.getIdToken(true);
+        original.headers.Authorization = `Bearer ${token}`;
+        return api(original);
+      } catch {
+        await auth.signOut();
       }
     }
     return Promise.reject(error);

@@ -1,23 +1,34 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { AuthShell } from '../../features/auth/auth-shell';
 import { TextField, Button } from '../../components/ui';
+import { signupWithEmail, authErrorMessage } from '../../services/auth';
+import { useAuthStore } from '../../store/authStore';
+import type { SignupRole } from '../../types';
 
-type Role = 'caregiver' | 'family_contributor';
-
-const ROLES: { value: Role; label: string; hint: string }[] = [
-  { value: 'caregiver', label: 'Caregiver', hint: 'I manage memories for a loved one' },
-  { value: 'family_contributor', label: 'Family member', hint: 'I add photos and stories' },
+const ROLES: { value: SignupRole; label: string; hint: string }[] = [
+  { value: 'CAREGIVER', label: 'Caregiver', hint: 'I manage memories for a loved one' },
+  { value: 'FAMILY_CONTRIBUTOR', label: 'Family member', hint: 'I add photos and stories' },
 ];
 
 export function SignupPage() {
-  const [role, setRole] = useState<Role>('caregiver');
+  const navigate = useNavigate();
+  const status = useAuthStore((s) => s.status);
+
+  const [role, setRole] = useState<SignupRole>('CAREGIVER');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
-  const onSubmit = (e: React.FormEvent) => {
+  // The AuthProvider syncs after Firebase sign-up; redirect once authenticated.
+  useEffect(() => {
+    if (status === 'authenticated') navigate('/app', { replace: true });
+    else if (status === 'unauthenticated') setSubmitting(false);
+  }, [status, navigate]);
+
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !email.trim() || !password) {
       setError('Please fill in every field');
@@ -28,7 +39,13 @@ export function SignupPage() {
       return;
     }
     setError(null);
-    // TODO: connect to the auth API
+    setSubmitting(true);
+    try {
+      await signupWithEmail(email.trim(), password, name.trim(), role);
+    } catch (err) {
+      setError(authErrorMessage(err));
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -62,8 +79,8 @@ export function SignupPage() {
         <TextField label="Email" type="email" autoComplete="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} />
         <TextField label="Password" type="password" autoComplete="new-password" placeholder="At least 8 characters" value={password} onChange={(e) => setPassword(e.target.value)} />
         {error && <p className="text-[13px] font-medium text-error">{error}</p>}
-        <Button type="submit" size="lg" className="mt-1 w-full">
-          Create account
+        <Button type="submit" size="lg" className="mt-1 w-full" disabled={submitting}>
+          {submitting ? 'Creating account…' : 'Create account'}
         </Button>
       </form>
 

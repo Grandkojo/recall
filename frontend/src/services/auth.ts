@@ -1,6 +1,8 @@
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
   updateProfile,
   signOut,
 } from 'firebase/auth';
@@ -52,6 +54,23 @@ export async function signupWithEmail(
   pendingSignup.set({ role, fullName });
   const credential = await createUserWithEmailAndPassword(auth, email, password);
   await updateProfile(credential.user, { displayName: fullName });
+}
+
+const googleProvider = new GoogleAuthProvider();
+
+/** Firebase Google sign-in. The AuthProvider handles the ensuing sync. */
+export async function loginWithGoogle(): Promise<void> {
+  await signInWithPopup(auth, googleProvider);
+}
+
+/**
+ * Firebase Google sign-up. Stashes the chosen role so the AuthProvider syncs it
+ * to the backend on the resulting auth change.
+ */
+export async function signupWithGoogle(role: SignupRole): Promise<void> {
+  // Stash the role. The full name will be extracted from the Google profile by the AuthProvider
+  pendingSignup.set({ role, fullName: '' });
+  await signInWithPopup(auth, googleProvider);
 }
 
 export async function logout(): Promise<void> {

@@ -64,6 +64,18 @@ async def query_memories(
     results = await cognee.recall(q)
     return {"query": q, "results": results}
 
+@router.get("/patient/{patient_id}")
+async def get_patient_memories(
+    patient_id: int,
+    db: Session = Depends(get_db),
+    user: dict = Depends(get_current_user)
+):
+    """
+    Fetch all raw memory records for a given patient to allow caregivers to manage them.
+    """
+    memories = db.query(Media).filter(Media.patient_id == patient_id).order_by(Media.created_at.desc()).all()
+    return memories
+
 @router.post("/enrich")
 async def enrich_graph(
     user: dict = Depends(require_role(["CAREGIVER"]))

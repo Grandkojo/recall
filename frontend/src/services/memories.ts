@@ -4,6 +4,7 @@ import type {
   MessageResponse,
   QueryMemoriesResponse,
   UploadMemoryResponse,
+  Media,
 } from '../types';
 
 export interface UploadMemoryInput {
@@ -43,6 +44,12 @@ export async function queryMemories(q: string, patientId: number): Promise<Query
   const { data } = await api.get<QueryMemoriesResponse>('/api/memories/query', {
     params: { q, patient_id: patientId },
   });
+  return data;
+}
+
+/** GET /api/memories/patient/{id} — fetches all raw memories for a patient. */
+export async function getPatientMemories(patientId: number): Promise<Media[]> {
+  const { data } = await api.get<Media[]>(`/api/memories/patient/${patientId}`);
   return data;
 }
 

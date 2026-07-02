@@ -4,6 +4,7 @@ import {
   enrichGraph,
   queryMemories,
   uploadMemory,
+  getPatientMemories,
   type UploadMemoryInput,
 } from '../services/memories';
 import { queryKeys } from '../lib/queryKeys';
@@ -11,6 +12,7 @@ import type {
   MessageResponse,
   QueryMemoriesResponse,
   UploadMemoryResponse,
+  Media,
 } from '../types';
 
 /**
@@ -23,6 +25,14 @@ export function useQueryMemories(patientId: number, q: string) {
     queryKey: queryKeys.memories.query(patientId, trimmed),
     queryFn: () => queryMemories(trimmed, patientId),
     enabled: patientId > 0 && trimmed.length > 0,
+  });
+}
+
+export function useGetPatientMemories(patientId: number) {
+  return useQuery<Media[]>({
+    queryKey: ['memories', 'patient', patientId],
+    queryFn: () => getPatientMemories(patientId),
+    enabled: patientId > 0,
   });
 }
 

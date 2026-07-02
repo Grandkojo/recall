@@ -32,6 +32,7 @@ services:
       - db
 
   db:
+    container_name: db
     image: ankane/pgvector:latest
     environment:
       POSTGRES_USER: postgres

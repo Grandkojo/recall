@@ -34,6 +34,14 @@ export interface Patient {
   diagnosis_stage: string | null;
 }
 
+/** Payload for POST /api/patients */
+export interface PatientCreate {
+  first_name: string;
+  last_name: string;
+  date_of_birth?: string;
+  diagnosis_stage?: string;
+}
+
 /** backend: app/models/media.py -> Media */
 export interface Media {
   id: number;

@@ -323,7 +323,7 @@ function CaregiverToolsCard({ patientId }: { patientId: number }) {
   const enrich = useEnrichGraph();
   const del = useDeleteMemory();
   const [mediaId, setMediaId] = useState('');
-  const { data: memories, isLoading } = useGetPatientMemories(patientId);
+  const { data: memories } = useGetPatientMemories(patientId);
 
   return (
     <Card title="Graph Settings">

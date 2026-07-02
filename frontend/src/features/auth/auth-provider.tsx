@@ -4,6 +4,7 @@ import { auth } from '../../lib/firebase';
 import { pendingSignup } from '../../lib/pending-signup';
 import { syncUser } from '../../services/auth';
 import { useAuthStore } from '../../store/authStore';
+import { AxiosError } from 'axios';
 
 /**
  * Single owner of the auth lifecycle. Subscribes to Firebase and, on every
@@ -30,10 +31,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const signup = pendingSignup.take();
         const user = await syncUser(signup ?? undefined);
         setUser(user);
-      } catch {
-        // Backend sync failed — don't sit half-authenticated. Signing out
-        // re-triggers this listener with null, landing on 'unauthenticated'.
-        await auth.signOut();
+      } catch (err) {
+        if (err instanceof AxiosError && err.response?.status === 428) {
+          setStatus('needs_role');
+        } else {
+          // Backend sync failed — don't sit half-authenticated. Signing out
+          // re-triggers this listener with null, landing on 'unauthenticated'.
+          await auth.signOut();
+        }
       }
     });
 

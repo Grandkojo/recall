@@ -24,6 +24,9 @@ export function ProtectedRoute() {
   const location = useLocation();
 
   if (status === 'loading') return <AuthLoading />;
+  if (status === 'needs_role') {
+    return <Navigate to="/choose-role" replace />;
+  }
   if (status === 'unauthenticated') {
     return <Navigate to="/login" replace state={{ from: location.pathname }} />;
   }

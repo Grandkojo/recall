@@ -1,8 +1,12 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
-from app.api.routers import memories, auth
+from app.api.routers import memories, auth, patients
 import cognee
+from app.core.database import engine
+from app.models import Base
+
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title=settings.PROJECT_NAME)
 
@@ -15,6 +19,7 @@ app.add_middleware(
 )
 
 app.include_router(auth.router)
+app.include_router(patients.router)
 app.include_router(memories.router)
 
 @app.get("/")

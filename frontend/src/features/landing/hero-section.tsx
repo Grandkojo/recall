@@ -51,7 +51,7 @@ export function HeroSection() {
               {hero.titleLead} <span className="text-primary">{hero.titleAccent}</span> {hero.titleTail}
             </h1>
 
-            <p className="mt-5 max-w-[46ch] text-sm font-medium leading-relaxed text-body">
+            <p className="mt-5 max-w-[46ch] text-sm font-normal leading-relaxed text-body">
               {hero.subtitle}
             </p>
 

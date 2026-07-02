@@ -30,6 +30,8 @@
   --color-teal: #2BBFCF;
   --color-amber: #E8A55A;
   --color-error: #D94F4F;
+  --color-success: #2E9E6B;
+  --color-success-soft: #E7F4EC;
 
   /* Type — Space Grotesk everywhere */
   --font-sans: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, sans-serif;

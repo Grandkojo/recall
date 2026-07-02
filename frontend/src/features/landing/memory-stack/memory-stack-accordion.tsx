@@ -37,7 +37,7 @@ export function MemoryStackAccordion({ activeIndex, onSelect }: MemoryStackAccor
             </button>
             <div className={`grid transition-all duration-300 ease-out ${active ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
               <div className="overflow-hidden">
-                <p className="max-w-prose pb-5 pl-[2.25rem] font-medium text-body">{layer.blurb}</p>
+                <p className="max-w-prose pb-5 pl-[2.25rem] text-sm font-normal text-body">{layer.blurb}</p>
               </div>
             </div>
           </li>

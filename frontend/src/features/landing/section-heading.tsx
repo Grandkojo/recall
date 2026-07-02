@@ -15,7 +15,7 @@ export function SectionHeading({ eyebrow, heading, subheading }: SectionHeadingP
       <h2 className="mt-5 text-[clamp(1.9rem,4vw,3rem)] font-bold leading-[1.06] tracking-[-0.02em] text-ink">
         {heading}
       </h2>
-      {subheading && <p className="mt-4 text-lg font-medium text-body">{subheading}</p>}
+      {subheading && <p className="mt-4 text-sm font-normal text-body">{subheading}</p>}
     </div>
   );
 }

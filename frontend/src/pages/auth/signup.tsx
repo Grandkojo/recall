@@ -11,8 +11,6 @@ const ROLES: { value: SignupRole; label: string; hint: string }[] = [
   { value: 'FAMILY_CONTRIBUTOR', label: 'Family member', hint: 'I add photos and stories' },
 ];
 
-import reminisceImg from '../../assets/memories/reminisce-empty-state.png';
-
 export function SignupPage() {
   const navigate = useNavigate();
   const status = useAuthStore((s) => s.status);
@@ -51,7 +49,7 @@ export function SignupPage() {
   };
 
   return (
-    <AuthShell title="Create your account" subtitle="Start preserving the memories that matter" illustrationSrc={reminisceImg}>
+    <AuthShell title="Create your account" subtitle="Start preserving the memories that matter">
       <form onSubmit={onSubmit} noValidate className="flex flex-col gap-5">
         {/* Role selector — the two account types */}
         <div>

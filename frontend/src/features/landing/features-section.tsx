@@ -63,7 +63,7 @@ export function FeaturesSection() {
                 </svg>
               </span>
               <h3 className="mt-6 text-lg font-bold tracking-tight text-ink">{feature.title}</h3>
-              <p className="mt-2 text-[15px] font-medium leading-relaxed text-body">{feature.body}</p>
+              <p className="mt-2 text-sm font-normal leading-relaxed text-body">{feature.body}</p>
 
               {/* accent line grows on hover */}
               <span className="absolute bottom-0 left-0 h-[3px] w-0 bg-primary transition-[width] duration-300 ease-out group-hover:w-full" />

@@ -20,7 +20,7 @@ export function StatsBar() {
               <p className="text-[clamp(2.4rem,5vw,3.4rem)] font-bold leading-none tracking-tight text-ink">
                 <CountUp value={stat.value} />
               </p>
-              <p className="mt-3 max-w-[24ch] text-sm font-medium text-muted">{stat.label}</p>
+              <p className="mt-3 max-w-[24ch] text-sm font-normal text-muted">{stat.label}</p>
             </div>
           ))}
         </div>

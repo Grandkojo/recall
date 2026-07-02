@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 import { Button, TextField } from '../../components/ui';
 import { useAuth } from '../../hooks/useAuth';
 import { useQueryMemories } from '../../hooks/useMemories';
-import { useGetPatients, useCreatePatient } from '../../hooks/usePatients';
+import { useGetPatients, useCreatePatient, useJoinCareCircle } from '../../hooks/usePatients';
 import { usePatientStore } from '../../store/patientStore';
-import { Card, inputCls } from './shared';
+import { Card, FieldLabel, inputCls, PlusIcon, SettingsIcon, ArrowRightIcon } from './shared';
 import reminisceImg from '../../assets/memories/reminisce-empty-state.png';
 import waitingImg from '../../assets/memories/Soothing Minimalist Abstract Background (1).png';
 
@@ -15,57 +15,60 @@ export function Dashboard() {
   const patientId = usePatientStore((s) => s.patientId);
 
   return (
-    <main className="flex-1 w-full max-w-6xl mx-auto px-6 pt-10 pb-20 flex flex-col">
+    <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 pt-6 pb-12 md:px-6 md:pt-10 md:pb-16">
       {isLoadingPatients ? (
         <div className="flex justify-center py-20">
-          <p className="text-muted font-medium animate-pulse">Loading dashboard...</p>
+          <p className="animate-pulse font-medium text-muted">Loading dashboard...</p>
         </div>
       ) : patients && patients.length === 0 ? (
         role === 'CAREGIVER' ? (
           <PatientOnboarding />
         ) : (
-          <div className="flex-1 flex justify-center py-10 text-center flex-col items-center gap-4">
+          <div className="flex flex-1 flex-col items-center justify-center py-10 text-center">
             <JoinCareCircle />
           </div>
         )
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Main Content Area: Reminisce Search */}
-          <div className="lg:col-span-8 flex flex-col gap-6">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+          {/* Main: Reminisce */}
+          <div className="flex flex-col gap-6 lg:col-span-8">
             <ReminisceCard patientId={patientId} />
           </div>
 
-          {/* Sidebar / Configuration CTAs */}
-          <div className="lg:col-span-4 flex flex-col gap-4">
+          {/* Side: navigation CTAs */}
+          <div className="flex flex-col gap-4 lg:col-span-4">
             {canUpload && (
-              <Link to="/app/add-memory" className="group">
-                <div className="rounded-2xl border border-line-strong bg-white/70 shadow-sm backdrop-blur-md p-5 flex items-center justify-between transition-all hover:bg-primary-soft/40 hover:border-primary/40">
-                  <div className="flex flex-col">
-                    <span className="font-semibold text-ink">Add a Memory</span>
-                    <span className="text-sm text-muted">Upload photos, videos, or stories</span>
-                  </div>
-                  <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
-                    &rarr;
-                  </div>
-                </div>
-              </Link>
+              <CtaCard to="/app/add-memory" icon={<PlusIcon />} title="Add a Memory" subtitle="Upload photos, videos, or stories" />
             )}
-
-            <Link to="/app/settings" className="group">
-              <div className="rounded-2xl border border-line-strong bg-white/70 shadow-sm backdrop-blur-md p-5 flex items-center justify-between transition-all hover:bg-primary-soft/40 hover:border-primary/40">
-                <div className="flex flex-col">
-                  <span className="font-semibold text-ink">Dashboard Settings</span>
-                  <span className="text-sm text-muted">Switch active patient{canManage ? ' or manage graph' : ''}</span>
-                </div>
-                <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
-                  &rarr;
-                </div>
-              </div>
-            </Link>
+            <CtaCard
+              to="/app/settings"
+              icon={<SettingsIcon />}
+              title="Dashboard Settings"
+              subtitle={`Switch active patient${canManage ? ' or manage graph' : ''}`}
+            />
           </div>
         </div>
       )}
     </main>
+  );
+}
+
+/* ── Navigation CTA card ─────────────────────────────────────────────────── */
+function CtaCard({ to, icon, title, subtitle }: { to: string; icon: React.ReactNode; title: string; subtitle: string }) {
+  return (
+    <Link
+      to={to}
+      className="group flex items-center gap-4 border border-line bg-canvas p-5 transition-colors hover:border-primary hover:bg-primary-soft/40"
+    >
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center border border-line-strong text-primary transition-colors group-hover:border-primary group-hover:bg-primary group-hover:text-white">
+        {icon}
+      </span>
+      <span className="flex min-w-0 flex-col">
+        <span className="font-bold text-ink">{title}</span>
+        <span className="text-sm text-muted">{subtitle}</span>
+      </span>
+      <ArrowRightIcon className="ml-auto shrink-0 text-muted transition-colors group-hover:text-primary" />
+    </Link>
   );
 }
 
@@ -80,7 +83,6 @@ function PatientOnboarding() {
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!firstName.trim() || !lastName.trim()) return;
-    
     mutate({
       first_name: firstName.trim(),
       last_name: lastName.trim(),
@@ -90,49 +92,31 @@ function PatientOnboarding() {
   };
 
   return (
-    <div className="mx-auto max-w-lg mt-10">
-      <Card title="Register your patient" className="shadow-lg border-primary/20">
-        <p className="text-body mb-6">Welcome to Recall! To get started, please register the patient you are caring for.</p>
-        
+    <div className="mx-auto mt-4 w-full max-w-lg md:mt-10">
+      <Card title="Register your patient" className="border-primary/30">
+        <p className="mb-6 text-sm font-normal text-body">
+          Welcome to Recall! To get started, please register the patient you are caring for.
+        </p>
         <form onSubmit={onSubmit} className="flex flex-col gap-4">
-          <TextField
-            label="First Name"
-            placeholder="e.g. Grace"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-          />
-          <TextField
-            label="Last Name"
-            placeholder="e.g. Osei"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-          />
+          <TextField label="First Name" placeholder="e.g. Grace" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+          <TextField label="Last Name" placeholder="e.g. Osei" value={lastName} onChange={(e) => setLastName(e.target.value)} />
           <div className="flex flex-col gap-1.5">
-            <label className="text-[12px] font-semibold uppercase tracking-[0.14em] text-ink-soft">Date of Birth (Optional)</label>
-            <input
-              type="date"
-              className={inputCls}
-              value={dob}
-              onChange={(e) => setDob(e.target.value)}
-            />
+            <FieldLabel>Date of Birth (Optional)</FieldLabel>
+            <input type="date" className={inputCls} value={dob} onChange={(e) => setDob(e.target.value)} />
           </div>
           <div className="flex flex-col gap-1.5">
-            <label className="text-[12px] font-semibold uppercase tracking-[0.14em] text-ink-soft">Diagnosis Stage (Optional)</label>
-            <select
-              className={inputCls}
-              value={stage}
-              onChange={(e) => setStage(e.target.value)}
-            >
+            <FieldLabel>Diagnosis Stage (Optional)</FieldLabel>
+            <select className={inputCls} value={stage} onChange={(e) => setStage(e.target.value)}>
               <option value="">Select a stage</option>
               <option value="Early">Early Stage</option>
               <option value="Moderate">Moderate Stage</option>
               <option value="Advanced">Advanced Stage</option>
             </select>
           </div>
-
-          {error && <p className="text-sm text-error">{error instanceof Error ? error.message : 'Registration failed'}</p>}
-          
-          <Button type="submit" size="lg" className="mt-4 w-full rounded-xl" disabled={isPending || !firstName.trim() || !lastName.trim()}>
+          {error && (
+            <p className="text-[13px] font-medium text-error">{error instanceof Error ? error.message : 'Registration failed'}</p>
+          )}
+          <Button type="submit" size="lg" className="mt-2 w-full" disabled={isPending || !firstName.trim() || !lastName.trim()}>
             {isPending ? 'Registering...' : 'Complete Setup'}
           </Button>
         </form>
@@ -153,50 +137,49 @@ function ReminisceCard({ patientId }: { patientId: number }) {
   };
 
   return (
-    <Card title="Reminisce & Discover" className="min-h-[500px] flex flex-col">
+    <Card title="Reminisce & Discover">
       <form onSubmit={onSubmit} className="flex flex-col gap-3 sm:flex-row">
         <input
-          className={`${inputCls} shadow-sm border-primary/20`}
+          className={`${inputCls} sm:flex-1`}
           placeholder="Ask about a memory... e.g., 'Who is Abena?'"
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
         />
-        <Button type="submit" size="lg" disabled={patientId <= 0 || !draft.trim()} className="rounded-xl px-8 shadow-md hover:shadow-lg transition-all">
+        <Button type="submit" size="lg" disabled={!draft.trim()} className="w-full sm:w-auto sm:px-8">
           Recall
         </Button>
       </form>
 
-      <div className="mt-6 flex-1 bg-surface/50 rounded-2xl border border-line-strong p-6 overflow-auto">
-        {patientId <= 0 && !q && (
-          <div className="flex h-full flex-col items-center justify-center text-center">
-            <img src={reminisceImg} alt="Memories" className="mb-4 h-48 w-48 object-cover rounded-full opacity-90 shadow-sm" />
-            <p className="text-sm font-medium text-muted max-w-sm">Select a patient in Settings, then enter a memory prompt to explore their life graph.</p>
+      <div className="mt-6 min-h-[320px] overflow-auto border border-line-strong bg-surface p-5 md:p-6">
+        {!q && !isFetching && (
+          <div className="flex flex-col items-center justify-center gap-4 py-10 text-center">
+            <img src={reminisceImg} alt="" className="h-40 w-40 rounded-full object-cover opacity-90" />
+            <p className="max-w-sm text-sm font-normal text-muted">
+              {patientId <= 0
+                ? 'Select a patient in Settings, then enter a memory prompt to explore their life graph.'
+                : 'Enter a memory prompt above to explore their life graph.'}
+            </p>
           </div>
         )}
         {isFetching && (
-          <div className="flex h-full items-center justify-center text-center">
-            <p className="text-sm font-medium text-primary animate-pulse">Searching the memory graph...</p>
+          <div className="flex items-center justify-center py-16 text-center">
+            <p className="animate-pulse text-sm font-medium text-primary">Searching the memory graph...</p>
           </div>
         )}
         {isError && (
-          <p className="text-[13px] font-medium text-error">
-            {error instanceof Error ? error.message : 'Search failed'}
-          </p>
+          <p className="text-[13px] font-medium text-error">{error instanceof Error ? error.message : 'Search failed'}</p>
         )}
-        {data && (
-          <div className="animate-rise space-y-4">
-            <pre className="whitespace-pre-wrap text-[14px] leading-relaxed text-ink-soft font-sans">
-              {typeof data.results === 'string' ? data.results : JSON.stringify(data.results, null, 2)}
-            </pre>
-          </div>
+        {data && !isFetching && (
+          <pre className="animate-rise whitespace-pre-wrap font-sans text-[14px] leading-relaxed text-ink-soft">
+            {typeof data.results === 'string' ? data.results : JSON.stringify(data.results, null, 2)}
+          </pre>
         )}
       </div>
     </Card>
   );
 }
 
-import { useJoinCareCircle } from '../../hooks/usePatients';
-
+/* ── Join a Care Circle (family contributor, no patient yet) ─────────────── */
 function JoinCareCircle() {
   const [code, setCode] = useState('');
   const join = useJoinCareCircle();
@@ -209,33 +192,32 @@ function JoinCareCircle() {
   };
 
   return (
-    <div className="mx-auto max-w-lg mt-0">
-      <img src={waitingImg} alt="Waiting for invitation" className="w-64 h-auto object-contain mx-auto mix-blend-multiply mb-4" />
-      <h2 className="text-xl font-semibold text-ink mb-2">Join a Care Circle</h2>
-      <p className="text-muted max-w-sm mx-auto mb-6">
+    <div className="mx-auto w-full max-w-md text-center">
+      <img src={waitingImg} alt="" className="mx-auto mb-5 h-40 w-auto object-contain mix-blend-multiply" />
+      <h2 className="mb-2 text-xl font-bold tracking-tight text-ink">Join a Care Circle</h2>
+      <p className="mx-auto mb-6 max-w-sm text-sm font-normal text-muted">
         You are registered as a Family Contributor. Please ask your Primary Caregiver for an invite code.
       </p>
 
-      <Card title="Enter Invite Code" className="shadow-md border-primary/20 text-center">
+      <Card title="Enter Invite Code" className="border-primary/30 text-left">
         <form onSubmit={onSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
-            <label className="text-[12px] font-semibold uppercase tracking-[0.14em] text-ink-soft">6-Digit Code</label>
+            <FieldLabel>6-Digit Code</FieldLabel>
             <input
-              className={`${inputCls} font-mono tracking-widest text-lg uppercase text-center`}
-              placeholder="e.g. A7X9K2"
+              className={`${inputCls} text-center font-mono text-lg uppercase tracking-[0.4em]`}
+              placeholder="A7X9K2"
               maxLength={6}
               value={code}
               onChange={(e) => setCode(e.target.value.toUpperCase())}
             />
           </div>
-          
           {join.isError && (
-            <p className="text-sm font-medium text-error p-2 bg-error-soft/30 rounded-lg">
-              {(join.error as any).response?.data?.detail || 'The invite code you entered is invalid or has expired.'}
+            <p className="border border-error/40 bg-error/5 px-3 py-2.5 text-[13px] font-medium text-error">
+              {(join.error as { response?: { data?: { detail?: string } } })?.response?.data?.detail ||
+                'The invite code you entered is invalid or has expired.'}
             </p>
           )}
-
-          <Button type="submit" size="lg" disabled={join.isPending || code.length !== 6} className="w-full rounded-xl">
+          <Button type="submit" size="lg" disabled={join.isPending || code.length !== 6} className="w-full">
             {join.isPending ? 'Joining...' : 'Join Care Circle'}
           </Button>
         </form>

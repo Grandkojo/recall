@@ -18,8 +18,15 @@ export function LoginPage() {
 
   // The AuthProvider syncs after Firebase sign-in; redirect once authenticated.
   useEffect(() => {
-    if (status === 'authenticated') navigate(from, { replace: true });
-    else if (status === 'unauthenticated') setSubmitting(false);
+    if (status === 'authenticated') {
+      navigate(from, { replace: true });
+    } else if (status === 'needs_role') {
+      import('../../services/auth').then((m) => m.logout());
+      setError('Account not found. Please create an account first.');
+      setSubmitting(false);
+    } else if (status === 'unauthenticated') {
+      setSubmitting(false);
+    }
   }, [status, from, navigate]);
 
   const onSubmit = async (e: React.FormEvent) => {

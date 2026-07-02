@@ -6,8 +6,9 @@ import type { AuthUser } from '../types';
  * 'loading'         — Firebase is still resolving the persisted session
  * 'authenticated'   — Firebase user present AND synced with the backend
  * 'unauthenticated' — no Firebase user
+ * 'needs_role'      — Firebase user present BUT needs to pick a role
  */
-export type AuthStatus = 'loading' | 'authenticated' | 'unauthenticated';
+export type AuthStatus = 'loading' | 'authenticated' | 'unauthenticated' | 'needs_role';
 
 interface AuthState {
   /** local backend profile (id/role) merged from POST /api/auth/sync */

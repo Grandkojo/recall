@@ -4,11 +4,13 @@ from app.api.deps import get_db, get_current_user
 from app.models.user import User, RoleEnum
 from pydantic import BaseModel
 
+from typing import Optional
+
 router = APIRouter(prefix="/api/auth", tags=["Auth"])
 
 class SyncRequest(BaseModel):
-    role: RoleEnum = RoleEnum.FAMILY_CONTRIBUTOR
-    full_name: str = None
+    role: Optional[RoleEnum] = None
+    full_name: Optional[str] = None
 
 @router.post("/sync")
 def sync_user(
@@ -28,6 +30,8 @@ def sync_user(
     
     user = db.query(User).filter(User.firebase_uid == uid).first()
     if not user:
+        if not request.role:
+            raise HTTPException(status_code=428, detail="Role required for new users")
         # Create new user
         user = User(
             firebase_uid=uid,

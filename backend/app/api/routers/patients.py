@@ -69,3 +69,75 @@ def get_patients(
         return [patient]
     
     return []
+
+import random
+import string
+
+class InviteCodeResponse(BaseModel):
+    invite_code: str
+
+@router.post("/{patient_id}/invite-code", response_model=InviteCodeResponse)
+def generate_invite_code(
+    patient_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_role([RoleEnum.CAREGIVER.value]))
+):
+    """
+    Generates a unique 6-character invite code for a patient.
+    """
+    if current_user.patient_id != patient_id:
+        raise HTTPException(status_code=403, detail="Not authorized to manage this patient")
+        
+    patient = db.query(Patient).filter(Patient.id == patient_id).first()
+    if not patient:
+        raise HTTPException(status_code=404, detail="Patient not found")
+        
+    # Generate a random 6-character uppercase alphanumeric code
+    code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+    patient.invite_code = code
+    db.commit()
+    
+    return {"invite_code": code}
+
+@router.get("/{patient_id}/invite-code", response_model=InviteCodeResponse)
+def get_invite_code(
+    patient_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_role([RoleEnum.CAREGIVER.value]))
+):
+    """
+    Gets the current invite code for a patient.
+    """
+    if current_user.patient_id != patient_id:
+        raise HTTPException(status_code=403, detail="Not authorized to manage this patient")
+        
+    patient = db.query(Patient).filter(Patient.id == patient_id).first()
+    if not patient:
+        raise HTTPException(status_code=404, detail="Patient not found")
+        
+    return {"invite_code": patient.invite_code or ""}
+
+class JoinRequest(BaseModel):
+    invite_code: str
+
+@router.post("/join", response_model=PatientResponse)
+def join_care_circle(
+    req: JoinRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_role([RoleEnum.FAMILY_CONTRIBUTOR.value, RoleEnum.CAREGIVER.value]))
+):
+    """
+    Allows a user to join a patient's care circle using an invite code.
+    """
+    if not req.invite_code:
+        raise HTTPException(status_code=400, detail="Invite code is required")
+        
+    patient = db.query(Patient).filter(Patient.invite_code == req.invite_code).first()
+    if not patient:
+        raise HTTPException(status_code=404, detail="Invalid invite code")
+        
+    current_user.patient_id = patient.id
+    db.commit()
+    
+    return patient
+

@@ -5,17 +5,17 @@ import { useUploadMemory } from '../../hooks/useMemories';
 import { MEDIA_TYPES } from '../../services/memories';
 import type { MediaType } from '../../types';
 import { usePatientStore } from '../../store/patientStore';
-import { Card, inputCls } from './shared';
+import { Card, FieldLabel, inputCls, ArrowLeftIcon } from './shared';
 
 export function AddMemoryPage() {
   const patientId = usePatientStore((s) => s.patientId);
 
   return (
-    <main className="flex-1 w-full max-w-2xl mx-auto px-6 pt-10 pb-20 flex flex-col gap-6">
-      <Link to="/app" className="text-sm font-semibold text-primary hover:underline">
-        &larr; Back to Dashboard
+    <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-6 px-4 pt-6 pb-12 md:px-6 md:pt-10 md:pb-16">
+      <Link to="/app" className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary-dark">
+        <ArrowLeftIcon /> Back to Dashboard
       </Link>
-      
+
       <UploadCard patientId={patientId} />
     </main>
   );
@@ -52,12 +52,8 @@ function UploadCard({ patientId }: { patientId: number }) {
     <Card title="Add a memory">
       <form onSubmit={onSubmit} className="flex flex-col gap-4">
         <div className="flex flex-col gap-1.5">
-          <label className="text-[12px] font-semibold uppercase tracking-[0.14em] text-ink-soft">Media Type</label>
-          <select
-            className={inputCls}
-            value={mediaType}
-            onChange={(e) => setMediaType(e.target.value as MediaType)}
-          >
+          <FieldLabel>Media Type</FieldLabel>
+          <select className={inputCls} value={mediaType} onChange={(e) => setMediaType(e.target.value as MediaType)}>
             {MEDIA_TYPES.map((t) => (
               <option key={t} value={t}>
                 {t.charAt(0).toUpperCase() + t.slice(1)}
@@ -67,7 +63,7 @@ function UploadCard({ patientId }: { patientId: number }) {
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <label className="text-[12px] font-semibold uppercase tracking-[0.14em] text-ink-soft">Caption or Story</label>
+          <FieldLabel>Caption or Story</FieldLabel>
           <textarea
             className={`${inputCls} h-auto py-3`}
             rows={4}
@@ -79,21 +75,19 @@ function UploadCard({ patientId }: { patientId: number }) {
 
         {needsFile && (
           <div className="flex flex-col gap-1.5">
-            <label className="text-[12px] font-semibold uppercase tracking-[0.14em] text-ink-soft">
+            <FieldLabel>
               {mediaType === 'photo' ? 'Upload Photo' : mediaType === 'voice' ? 'Upload Audio File' : mediaType === 'video' ? 'Upload Video' : 'Upload File'}
-            </label>
-            <div className="relative">
-              <input
-                type="file"
-                accept={acceptAttr}
-                className="w-full text-sm text-body file:mr-4 file:rounded-xl file:border-0 file:bg-primary-soft file:px-4 file:py-2.5 file:font-semibold file:text-primary hover:file:bg-primary/20 transition-all cursor-pointer"
-                onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-              />
-            </div>
+            </FieldLabel>
+            <input
+              type="file"
+              accept={acceptAttr}
+              className="w-full cursor-pointer text-sm text-body transition-colors file:mr-4 file:border-0 file:bg-primary-soft file:px-4 file:py-2.5 file:font-semibold file:text-primary hover:file:bg-primary/20"
+              onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+            />
           </div>
         )}
 
-        <Button type="submit" size="lg" disabled={disabled} className="rounded-xl mt-2">
+        <Button type="submit" size="lg" disabled={disabled} className="mt-2 w-full">
           {isPending ? 'Uploading & Processing...' : 'Save memory to graph'}
         </Button>
 
@@ -101,14 +95,12 @@ function UploadCard({ patientId }: { patientId: number }) {
           <p className="text-[13px] font-medium text-muted">Please configure a patient in Settings first.</p>
         )}
         {isSuccess && data && (
-          <div className="mt-2 rounded-lg bg-green-50 p-3 text-[13px] font-medium text-green-700 animate-rise">
+          <p className="animate-rise mt-1 border border-success/40 bg-success-soft px-3 py-2.5 text-[13px] font-medium text-success">
             Memory #{data.media_id} saved! It is currently being processed by Cognee in the background.
-          </div>
+          </p>
         )}
         {isError && (
-          <p className="text-[13px] font-medium text-error">
-            {error instanceof Error ? error.message : 'Upload failed'}
-          </p>
+          <p className="text-[13px] font-medium text-error">{error instanceof Error ? error.message : 'Upload failed'}</p>
         )}
       </form>
     </Card>

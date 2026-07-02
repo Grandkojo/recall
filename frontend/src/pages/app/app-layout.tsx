@@ -4,7 +4,6 @@ import { Button } from '../../components/ui';
 import { useAuth } from '../../hooks/useAuth';
 import { useGetPatients } from '../../hooks/usePatients';
 import { usePatientStore } from '../../store/patientStore';
-import bgImg from '../../assets/memories/Pastel Fluid Minimal Background.png';
 
 export function AppLayout() {
   const { user, role, logout } = useAuth();
@@ -20,10 +19,7 @@ export function AppLayout() {
   }, [patients, patientId, setPatientId]);
 
   return (
-    <div 
-      className={`min-h-svh flex flex-col bg-surface bg-cover bg-center bg-fixed ${patients && patients.length > 0 ? 'pb-20' : 'pb-0'}`}
-      style={{ backgroundImage: `url(${bgImg})` }}
-    >
+    <div className={`flex min-h-svh flex-col bg-surface ${patients && patients.length > 0 ? 'pb-20' : 'pb-0'}`}>
       <header className="sticky top-0 z-10 border-b border-line bg-canvas/80 backdrop-blur-lg">
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4">
           <div>

@@ -6,9 +6,6 @@ import { btnCls } from '../../components/ui';
 import { landingContent } from '../../lib/landing-content';
 import { HeroVisual } from './hero-visual';
 
-import reminisceImg from '../../assets/memories/reminisce-empty-state.png';
-import bgImg from '../../assets/memories/Soothing Minimalist Abstract Background.png';
-
 export function HeroSection() {
   const { hero } = landingContent;
   const colRef = useRef<HTMLDivElement>(null);
@@ -26,22 +23,18 @@ export function HeroSection() {
 
   return (
     // Full-viewport hero, content vertically centred with equal top/bottom space
-    // below the fixed nav. We use the abstract background image here.
-    <section 
-      className="relative flex min-h-svh flex-col justify-center border-b border-line pt-16 bg-cover bg-center"
-      style={{ backgroundImage: `url(${bgImg})` }}
-    >
+    // below the fixed nav. Decorative grid is clipped in its own layer so it
+    // never cuts off the content.
+    <section className="relative flex min-h-svh flex-col justify-center border-b border-line pt-16">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-        {/* Soft floating reminisce illustration in the background */}
-        <img 
-          src={reminisceImg} 
-          alt="" 
-          className="absolute -right-20 top-20 w-[600px] opacity-[0.07] mix-blend-multiply" 
-        />
-        <img 
-          src={reminisceImg} 
-          alt="" 
-          className="absolute -left-32 bottom-10 w-[400px] opacity-[0.05] mix-blend-multiply transform -scale-x-100" 
+        <div
+          className="absolute inset-0 opacity-60"
+          style={{
+            backgroundImage:
+              'linear-gradient(var(--color-line) 1px, transparent 1px), linear-gradient(90deg, var(--color-line) 1px, transparent 1px)',
+            backgroundSize: '64px 64px',
+            maskImage: 'radial-gradient(ellipse 80% 70% at 50% 35%, #000 30%, transparent 75%)',
+          }}
         />
       </div>
 

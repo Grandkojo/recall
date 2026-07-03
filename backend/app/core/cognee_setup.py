@@ -7,7 +7,11 @@ os.environ["ENABLE_BACKEND_ACCESS_CONTROL"] = "false"
 # Set up relational db env vars for pgvector BEFORE importing cognee
 db_url = os.getenv("DATABASE_URL")
 if db_url:
-    parsed = urlparse(db_url)
+    # Cognee needs its own dedicated Postgres database to avoid table name collisions (e.g. 'users' table)
+    # We replace the db name in the url with 'cognee_db'
+    cognee_db_url = db_url.rsplit('/', 1)[0] + '/cognee_db'
+    
+    parsed = urlparse(cognee_db_url)
     os.environ["DB_PROVIDER"] = "postgres"
     os.environ["DB_HOST"] = parsed.hostname or ""
     os.environ["DB_PORT"] = str(parsed.port or 5432)

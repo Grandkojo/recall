@@ -33,7 +33,11 @@ def synthesize_answer(query: str, search_results: list) -> str:
         
     # Convert search results to a string
     import json
-    context_str = json.dumps(search_results, indent=2)
+    context_str = json.dumps(
+        search_results, 
+        default=lambda o: o.__dict__ if hasattr(o, '__dict__') else str(o), 
+        indent=2
+    )
     
     prompt = f"""You are an empathetic, helpful AI assistant for a dementia care app called Recall. 
 A caregiver or patient is asking a question about their memories.

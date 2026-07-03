@@ -96,7 +96,7 @@ function UploadCard({ patientId }: { patientId: number }) {
         )}
         {isSuccess && data && (
           <p className="animate-rise mt-1 border border-success/40 bg-success-soft px-3 py-2.5 text-[13px] font-medium text-success">
-            Memory #{data.media_id} saved! It is currently being processed by Cognee in the background.
+            Memory #{data.media_id} saved! The AI is building the knowledge graph (this takes about a minute). You can check its status in Data Management.
           </p>
         )}
         {isError && (

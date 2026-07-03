@@ -14,6 +14,7 @@ class Media(Base):
     url = Column(String, nullable=False)
     caption = Column(Text)
     transcript = Column(Text) # for voice/video
+    status = Column(String, default="processing")
     
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
     

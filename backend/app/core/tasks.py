@@ -39,8 +39,22 @@ def process_media_upload(file_path: str, media_type: str, patient_id: int, media
             memory_text += f"\nTranscript: {transcript}"
             
         run_async(cognee.remember(memory_text))
+        
+        # Mark as ready
+        db = SessionLocal()
+        media_record = db.query(Media).filter(Media.id == media_id).first()
+        if media_record:
+            media_record.status = "ready"
+            db.commit()
+        db.close()
     except Exception as e:
         print("Cognee remember error:", e)
+        db = SessionLocal()
+        media_record = db.query(Media).filter(Media.id == media_id).first()
+        if media_record:
+            media_record.status = "failed"
+            db.commit()
+        db.close()
         
     if os.path.exists(file_path):
         os.remove(file_path)

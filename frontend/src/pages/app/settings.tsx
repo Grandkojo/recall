@@ -129,11 +129,14 @@ function CaregiverToolsCard({ patientId }: { patientId: number }) {
           >
             <select className={`${inputCls} sm:flex-1`} value={mediaId} onChange={(e) => setMediaId(e.target.value)}>
               <option value="">Select a memory to remove...</option>
-              {memories?.map((m) => (
-                <option key={m.id} value={m.id}>
-                  [{m.media_type.toUpperCase()}] {m.caption ? (m.caption.length > 30 ? m.caption.substring(0, 30) + '...' : m.caption) : `Memory ID: ${m.id}`}
-                </option>
-              ))}
+              {memories?.map((m) => {
+                const statusBadge = m.status === 'processing' ? '🔄 PROCESSING' : m.status === 'failed' ? '❌ FAILED' : '✅ READY';
+                return (
+                  <option key={m.id} value={m.id}>
+                    {statusBadge} [{m.media_type.toUpperCase()}] {m.caption ? (m.caption.length > 30 ? m.caption.substring(0, 30) + '...' : m.caption) : `Memory ID: ${m.id}`}
+                  </option>
+                );
+              })}
             </select>
             <Button type="submit" variant="danger" size="md" disabled={del.isPending || !mediaId} className="w-full sm:w-auto">
               {del.isPending ? 'Removing...' : 'Remove'}

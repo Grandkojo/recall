@@ -11,9 +11,9 @@ def run_async(coro):
     loop = asyncio.get_event_loop()
     return loop.run_until_complete(coro)
 
+from app.core.cognee_setup import setup_cognee
 import cognee
-cognee.config.set_embedding_provider("openai")
-cognee.config.set_embedding_model("text-embedding-3-small")
+setup_cognee()
 
 def process_media_upload(file_path: str, media_type: str, patient_id: int, media_id: int, caption: str = None):
     """

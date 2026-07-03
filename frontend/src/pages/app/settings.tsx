@@ -48,9 +48,9 @@ function CareCircleCard({ patientId }: { patientId: number }) {
 
   return (
     <Card title="Care Circle">
-      <FieldLabel>Invite Contributors</FieldLabel>
+      <FieldLabel>Invite to Care Circle</FieldLabel>
       <p className="mb-4 mt-2 text-sm font-normal leading-relaxed text-muted">
-        Family members can join this patient's care circle by entering an invite code when they sign up.
+        Family members and the patient themselves can join this care circle by entering this invite code when they sign up.
       </p>
 
       <div className="flex flex-col gap-3 border border-line-strong bg-surface p-4">

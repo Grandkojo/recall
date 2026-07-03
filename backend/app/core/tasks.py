@@ -7,9 +7,18 @@ import os
 import asyncio
 
 def run_async(coro):
-    """Helper to run async code inside sync celery tasks."""
-    loop = asyncio.get_event_loop()
-    return loop.run_until_complete(coro)
+    """Helper to run async code inside sync celery/background tasks."""
+    try:
+        loop = asyncio.get_event_loop()
+    except RuntimeError:
+        loop = None
+        
+    if loop and loop.is_running():
+        # If there's an already running loop in this thread, we shouldn't use run()
+        # but in FastAPI BackgroundTasks, there usually isn't one.
+        return loop.create_task(coro)
+    else:
+        return asyncio.run(coro)
 
 from app.core.cognee_setup import setup_cognee
 import cognee

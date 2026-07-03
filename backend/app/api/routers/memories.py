@@ -82,7 +82,11 @@ async def query_memories(
     Search/Reminisce interface for patients and caregivers.
     """
     results = await cognee.recall(q)
-    return {"query": q, "results": results}
+    
+    from app.services.openai_service import synthesize_answer
+    friendly_answer = synthesize_answer(q, results)
+    
+    return {"query": q, "results": results, "answer": friendly_answer}
 
 @router.get("/patient/{patient_id}")
 async def get_patient_memories(

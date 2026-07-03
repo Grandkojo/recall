@@ -14,11 +14,7 @@ function AuthLoading() {
   );
 }
 
-/**
- * Gate for authenticated routes. Waits out the 'loading' phase so a signed-in
- * user isn't bounced to /login on reload, then redirects if unauthenticated —
- * preserving the attempted path so login can return the user to it.
- */
+/** Auth gate: waits out loading, then redirects unauthenticated users to /login with the attempted path. */
 export function ProtectedRoute() {
   const { status } = useAuth();
   const location = useLocation();

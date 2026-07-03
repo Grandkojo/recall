@@ -5,7 +5,8 @@ import { useAuth } from '../../hooks/useAuth';
 import { useQueryMemories } from '../../hooks/useMemories';
 import { useGetPatients, useCreatePatient, useJoinCareCircle } from '../../hooks/usePatients';
 import { usePatientStore } from '../../store/patientStore';
-import { Card, FieldLabel, inputCls, PlusIcon, SettingsIcon, ArrowRightIcon } from './shared';
+import { Card, FieldLabel, inputCls, PlusIcon, SettingsIcon, SlideshowIcon, ArrowRightIcon } from './shared';
+import { PatientHome } from './patient-home';
 import reminisceImg from '../../assets/memories/reminisce-empty-state.png';
 import waitingImg from '../../assets/memories/Soothing Minimalist Abstract Background (1).png';
 
@@ -13,6 +14,11 @@ export function Dashboard() {
   const { role, canUpload, canManage } = useAuth();
   const { data: patients, isLoading: isLoadingPatients } = useGetPatients();
   const patientId = usePatientStore((s) => s.patientId);
+
+  // The patient living with dementia gets their own calm, simplified screen.
+  if (!isLoadingPatients && role === 'PATIENT' && patients && patients.length > 0) {
+    return <PatientHome patient={patients[0]} patientId={patientId} />;
+  }
 
   return (
     <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 pt-6 pb-12 md:px-6 md:pt-10 md:pb-16">
@@ -41,6 +47,12 @@ export function Dashboard() {
               <CtaCard to="/app/add-memory" icon={<PlusIcon />} title="Add a Memory" subtitle="Upload photos, videos, or stories" />
             )}
             <CtaCard
+              to="/app/showcase"
+              icon={<SlideshowIcon />}
+              title="Memory Showcase"
+              subtitle="Play a cinematic slideshow of their photos"
+            />
+            <CtaCard
               to="/app/settings"
               icon={<SettingsIcon />}
               title="Dashboard Settings"
@@ -64,7 +76,7 @@ function CtaCard({ to, icon, title, subtitle }: { to: string; icon: React.ReactN
         {icon}
       </span>
       <span className="flex min-w-0 flex-col">
-        <span className="font-bold text-ink">{title}</span>
+        <span className="font-semibold text-ink">{title}</span>
         <span className="text-sm text-muted">{subtitle}</span>
       </span>
       <ArrowRightIcon className="ml-auto shrink-0 text-muted transition-colors group-hover:text-primary" />
@@ -181,8 +193,10 @@ function ReminisceCard({ patientId }: { patientId: number }) {
 
 /* ── Join a Care Circle (family contributor, no patient yet) ─────────────── */
 function JoinCareCircle() {
+  const { role } = useAuth();
   const [code, setCode] = useState('');
   const join = useJoinCareCircle();
+  const isPatient = role === 'PATIENT';
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -194,9 +208,13 @@ function JoinCareCircle() {
   return (
     <div className="mx-auto w-full max-w-md text-center">
       <img src={waitingImg} alt="" className="mx-auto mb-5 h-40 w-auto object-contain mix-blend-multiply" />
-      <h2 className="mb-2 text-xl font-bold tracking-tight text-ink">Join a Care Circle</h2>
+      <h2 className="mb-2 text-xl font-semibold tracking-tight text-ink">
+        {isPatient ? 'See your memories' : 'Join a Care Circle'}
+      </h2>
       <p className="mx-auto mb-6 max-w-sm text-sm font-normal text-muted">
-        You are registered as a Family Contributor. Please ask your Primary Caregiver for an invite code.
+        {isPatient
+          ? 'Enter the invite code from your caregiver to open your memories.'
+          : 'You are registered as a Family member. Please ask the Primary Caregiver for an invite code.'}
       </p>
 
       <Card title="Enter Invite Code" className="border-primary/30 text-left">

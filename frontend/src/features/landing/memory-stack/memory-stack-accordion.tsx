@@ -20,11 +20,11 @@ export function MemoryStackAccordion({ activeIndex, onSelect }: MemoryStackAccor
               aria-expanded={active}
               className={`group flex w-full items-center gap-4 py-5 text-left transition-colors ${active ? '' : 'hover:bg-surface'}`}
             >
-              <span className={`text-[12px] font-bold tabular-nums tracking-[0.1em] ${active ? 'text-primary' : 'text-muted'}`}>
+              <span className={`text-[12px] font-semibold tabular-nums tracking-[0.1em] ${active ? 'text-primary' : 'text-muted'}`}>
                 {layer.index}
               </span>
               <span className={`h-2 w-2 shrink-0 transition-colors ${active ? 'bg-primary' : 'bg-line-strong'}`} />
-              <span className={`flex-1 text-lg font-bold tracking-tight transition-colors ${active ? 'text-ink' : 'text-ink-soft'}`}>
+              <span className={`flex-1 text-lg font-semibold tracking-tight transition-colors ${active ? 'text-ink' : 'text-ink-soft'}`}>
                 {layer.name}
               </span>
               <svg

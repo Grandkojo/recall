@@ -103,3 +103,12 @@ export function UsersIcon({ className = '' }: { className?: string }) {
     </svg>
   );
 }
+
+export function SlideshowIcon({ className = '' }: { className?: string }) {
+  return (
+    <svg width={18} height={18} viewBox="0 0 24 24" className={className} {...svgBase}>
+      <rect x="3" y="5" width="18" height="14" />
+      <path d="M10 9.5l4.5 2.5L10 14.5z" />
+    </svg>
+  );
+}

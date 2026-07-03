@@ -38,7 +38,7 @@ export function Navbar() {
         {/* Wordmark */}
         <Link to="/" className="flex items-center gap-2.5 select-none">
           <RecallMark />
-          <span className="text-[19px] font-bold tracking-tight text-ink">Recall</span>
+          <span className="text-[19px] font-semibold tracking-tight text-ink">Recall</span>
         </Link>
 
         {/* Desktop nav */}
@@ -48,7 +48,7 @@ export function Navbar() {
               <a
                 key={href}
                 href={href}
-                className="text-sm font-semibold text-ink-soft transition-colors hover:text-primary"
+                className="text-sm font-medium text-ink-soft transition-colors hover:text-primary"
               >
                 {label}
               </a>
@@ -58,7 +58,7 @@ export function Navbar() {
 
         {/* CTA cluster */}
         <div className="hidden items-center gap-3 md:flex">
-          <Link to="/login" className="text-sm font-semibold text-ink-soft transition-colors hover:text-primary">
+          <Link to="/login" className="text-sm font-medium text-ink-soft transition-colors hover:text-primary">
             Sign in
           </Link>
           <Link to="/signup" className={btnCls('primary', 'md')}>
@@ -90,7 +90,7 @@ export function Navbar() {
                     key={href}
                     href={href}
                     onClick={() => setMenuOpen(false)}
-                    className="border-b border-line py-3.5 text-sm font-semibold text-ink-soft"
+                    className="border-b border-line py-3.5 text-sm font-medium text-ink-soft"
                   >
                     {label}
                   </a>
@@ -99,7 +99,7 @@ export function Navbar() {
                 <Link
                   to="/login"
                   onClick={() => setMenuOpen(false)}
-                  className="text-sm font-semibold text-ink-soft"
+                  className="text-sm font-medium text-ink-soft"
                 >
                   Sign in
                 </Link>

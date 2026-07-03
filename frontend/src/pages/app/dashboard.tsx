@@ -182,9 +182,15 @@ function ReminisceCard({ patientId }: { patientId: number }) {
           <p className="text-[13px] font-medium text-error">{error instanceof Error ? error.message : 'Search failed'}</p>
         )}
         {data && !isFetching && (
-          <pre className="animate-rise whitespace-pre-wrap font-sans text-[14px] leading-relaxed text-ink-soft">
-            {typeof data.results === 'string' ? data.results : JSON.stringify(data.results, null, 2)}
-          </pre>
+          <div className="animate-rise whitespace-pre-wrap font-sans text-[15px] leading-relaxed text-ink-soft">
+            {data.answer ? (
+              <p>{data.answer}</p>
+            ) : (
+              <pre className="text-[14px]">
+                {typeof data.results === 'string' ? data.results : JSON.stringify(data.results, null, 2)}
+              </pre>
+            )}
+          </div>
         )}
       </div>
     </Card>

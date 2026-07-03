@@ -16,11 +16,11 @@ import demo4 from '../../assets/memories/memory-4.jpg';
 import demo5 from '../../assets/memories/memory-5.jpg';
 
 const DEMO_SLIDES: Slide[] = [
-  { id: 'demo-1', url: demo1, caption: 'Sample memory — your uploaded photos will appear here' },
-  { id: 'demo-2', url: demo2, caption: 'Sample memory — your uploaded photos will appear here' },
-  { id: 'demo-3', url: demo3, caption: 'Sample memory — your uploaded photos will appear here' },
-  { id: 'demo-4', url: demo4, caption: 'Sample memory — your uploaded photos will appear here' },
-  { id: 'demo-5', url: demo5, caption: 'Sample memory — your uploaded photos will appear here' },
+  { id: 'demo-1', url: demo1, caption: 'Sample memory' },
+  { id: 'demo-2', url: demo2, caption: 'Sample memory' },
+  { id: 'demo-3', url: demo3, caption: 'Sample memory' },
+  { id: 'demo-4', url: demo4, caption: 'Sample memory' },
+  { id: 'demo-5', url: demo5, caption: 'Sample memory' },
 ];
 
 export interface PatientPhotos {

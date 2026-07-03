@@ -7,8 +7,8 @@
 /** backend: app/models/user.py -> RoleEnum */
 export type Role = 'CAREGIVER' | 'FAMILY_CONTRIBUTOR' | 'PATIENT';
 
-/** Roles allowed to sign up from the frontend (PATIENT accounts are provisioned by a caregiver). */
-export type SignupRole = Extract<Role, 'CAREGIVER' | 'FAMILY_CONTRIBUTOR'>;
+/** Roles allowed to sign up from the frontend. Patients self-sign-up too, then link via an invite code. */
+export type SignupRole = Role;
 
 /** backend: app/models/media.py -> Media.media_type values (photo, voice, video, text) */
 export type MediaType = 'photo' | 'voice' | 'video' | 'text';

@@ -1,4 +1,4 @@
-import { useState, useEffect, type FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, TextField } from '../../components/ui';
 import { useAuth } from '../../hooks/useAuth';

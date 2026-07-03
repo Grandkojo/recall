@@ -1,9 +1,21 @@
 import os
 from dotenv import load_dotenv
+from urllib.parse import urlparse
 load_dotenv()
 os.environ["ENABLE_BACKEND_ACCESS_CONTROL"] = "false"
-import cognee
 
+# Set up relational db env vars for pgvector BEFORE importing cognee
+db_url = os.getenv("DATABASE_URL")
+if db_url:
+    parsed = urlparse(db_url)
+    os.environ["DB_PROVIDER"] = "postgres"
+    os.environ["DB_HOST"] = parsed.hostname or ""
+    os.environ["DB_PORT"] = str(parsed.port or 5432)
+    os.environ["DB_NAME"] = parsed.path.lstrip("/")
+    os.environ["DB_USERNAME"] = parsed.username or ""
+    os.environ["DB_PASSWORD"] = parsed.password or ""
+
+import cognee
 def setup_cognee():
     # OpenAI Embeddings
     cognee.config.set_embedding_provider("openai")

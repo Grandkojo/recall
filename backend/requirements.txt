@@ -15,3 +15,4 @@ passlib[bcrypt]
 pydantic-settings
 neo4j
 pgvector
+asyncpg

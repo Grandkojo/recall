@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { useState, useEffect, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, TextField } from '../../components/ui';
 import { useAuth } from '../../hooks/useAuth';
@@ -141,11 +141,30 @@ function PatientOnboarding() {
 function ReminisceCard({ patientId }: { patientId: number }) {
   const [draft, setDraft] = useState('');
   const [q, setQ] = useState('');
+  const [history, setHistory] = useState<string[]>([]);
   const { data, isFetching, isError, error } = useQueryMemories(patientId, q);
+
+  useEffect(() => {
+    if (patientId > 0) {
+      const saved = localStorage.getItem(`recall-query-history-${patientId}`);
+      if (saved) {
+        try {
+          setHistory(JSON.parse(saved));
+        } catch (e) {}
+      }
+    }
+  }, [patientId]);
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
-    setQ(draft);
+    const query = draft.trim();
+    if (!query) return;
+    setQ(query);
+    
+    // Update history
+    const newHistory = [query, ...history.filter((h) => h !== query)].slice(0, 10);
+    setHistory(newHistory);
+    localStorage.setItem(`recall-query-history-${patientId}`, JSON.stringify(newHistory));
   };
 
   return (
@@ -171,6 +190,29 @@ function ReminisceCard({ patientId }: { patientId: number }) {
                 ? 'Select a patient in Settings, then enter a memory prompt to explore their life graph.'
                 : 'Enter a memory prompt above to explore their life graph.'}
             </p>
+            {history.length > 0 && patientId > 0 && (
+              <div className="mt-6 w-full max-w-lg">
+                <h4 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted">Recent Searches</h4>
+                <div className="flex flex-wrap justify-center gap-2">
+                  {history.map((h, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={() => {
+                        setDraft(h);
+                        setQ(h);
+                        const newHistory = [h, ...history.filter((item) => item !== h)].slice(0, 10);
+                        setHistory(newHistory);
+                        localStorage.setItem(`recall-query-history-${patientId}`, JSON.stringify(newHistory));
+                      }}
+                      className="rounded-full border border-line-strong bg-white px-3.5 py-1.5 text-[13px] font-medium text-ink transition-colors hover:border-primary hover:text-primary"
+                    >
+                      {h}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
         {isFetching && (

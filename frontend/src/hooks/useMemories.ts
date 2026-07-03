@@ -33,6 +33,7 @@ export function useGetPatientMemories(patientId: number) {
     queryKey: ['memories', 'patient', patientId],
     queryFn: () => getPatientMemories(patientId),
     enabled: patientId > 0,
+    refetchInterval: 10000,
   });
 }
 

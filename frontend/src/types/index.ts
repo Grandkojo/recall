@@ -51,6 +51,7 @@ export interface Media {
   url: string;
   caption: string | null;
   transcript: string | null;
+  status: 'processing' | 'ready' | 'failed';
   created_at: string;
 }
 

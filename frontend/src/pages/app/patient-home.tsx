@@ -5,12 +5,7 @@ import { usePatientPhotos } from '../../features/showcase/use-patient-photos';
 import { MemorySlideshow } from '../../features/showcase/memory-slideshow';
 import type { Patient } from '../../types';
 
-/**
- * PatientHome — the person living with dementia's own screen. Deliberately calm
- * and uncluttered: a warm greeting, their memories playing as a cinematic reel,
- * and one gentle way to ask about a moment. No uploads, settings, or management —
- * large type and high contrast throughout.
- */
+/** PatientHome: calm large-type screen with a greeting, memory reel, and one ask box. */
 export function PatientHome({ patient, patientId }: { patient: Patient; patientId: number }) {
   const { slides } = usePatientPhotos(patientId);
 
@@ -18,7 +13,7 @@ export function PatientHome({ patient, patientId }: { patient: Patient; patientI
     <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-7 px-4 pt-8 pb-16 md:px-6 md:pt-12">
       <header className="text-center">
         <p className="text-[13px] font-semibold uppercase tracking-[0.18em] text-primary">Your memories</p>
-        <h1 className="mt-2 text-3xl font-bold tracking-tight text-ink md:text-4xl">
+        <h1 className="mt-2 text-3xl font-semibold tracking-tight text-ink md:text-4xl">
           Hello{patient.first_name ? `, ${patient.first_name}` : ''}
         </h1>
         <p className="mt-2 text-base font-normal text-body md:text-lg">
@@ -46,7 +41,7 @@ function PatientReminisce({ patientId }: { patientId: number }) {
 
   return (
     <section className="border border-line bg-canvas p-6 md:p-8">
-      <h2 className="text-xl font-bold tracking-tight text-ink md:text-2xl">Ask about a memory</h2>
+      <h2 className="text-xl font-semibold tracking-tight text-ink md:text-2xl">Ask about a memory</h2>
       <p className="mt-1.5 text-base font-normal text-body">
         Type a name or a place, and we’ll help you remember.
       </p>

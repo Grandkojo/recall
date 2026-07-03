@@ -4,11 +4,7 @@ import { usePatientPhotos } from '../../features/showcase/use-patient-photos';
 import { MemorySlideshow } from '../../features/showcase/memory-slideshow';
 import { ArrowLeftIcon } from './shared';
 
-/**
- * Memory Showcase — a cinematic reel of the active patient's real, processed
- * photo memories. Reached from the dashboard CTA; shared by caregivers and
- * family so they can reminisce together on a big screen.
- */
+/** Memory Showcase: cinematic reel of the active patient's photo memories. */
 export function MemoryShowcasePage() {
   const patientId = usePatientStore((s) => s.patientId);
   const { slides, isDemo, hasPatient } = usePatientPhotos(patientId);
@@ -30,7 +26,7 @@ export function MemoryShowcasePage() {
       </div>
 
       <header>
-        <h1 className="text-2xl font-bold tracking-tight text-ink md:text-3xl">Memory Showcase</h1>
+        <h1 className="text-2xl font-semibold tracking-tight text-ink md:text-3xl">Memory Showcase</h1>
         <p className="mt-1 text-sm font-normal text-muted">
           {!hasPatient
             ? 'Select a patient in Settings to see their memories.'

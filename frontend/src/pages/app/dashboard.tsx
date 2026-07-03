@@ -76,7 +76,7 @@ function CtaCard({ to, icon, title, subtitle }: { to: string; icon: React.ReactN
         {icon}
       </span>
       <span className="flex min-w-0 flex-col">
-        <span className="font-bold text-ink">{title}</span>
+        <span className="font-semibold text-ink">{title}</span>
         <span className="text-sm text-muted">{subtitle}</span>
       </span>
       <ArrowRightIcon className="ml-auto shrink-0 text-muted transition-colors group-hover:text-primary" />
@@ -208,7 +208,7 @@ function JoinCareCircle() {
   return (
     <div className="mx-auto w-full max-w-md text-center">
       <img src={waitingImg} alt="" className="mx-auto mb-5 h-40 w-auto object-contain mix-blend-multiply" />
-      <h2 className="mb-2 text-xl font-bold tracking-tight text-ink">
+      <h2 className="mb-2 text-xl font-semibold tracking-tight text-ink">
         {isPatient ? 'See your memories' : 'Join a Care Circle'}
       </h2>
       <p className="mx-auto mb-6 max-w-sm text-sm font-normal text-muted">

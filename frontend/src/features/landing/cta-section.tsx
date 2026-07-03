@@ -36,7 +36,7 @@ export function CtaSection() {
               <span className="h-2 w-2 bg-primary" />
               Get started
             </span>
-            <h2 className="mt-5 text-[clamp(2rem,4.5vw,3.4rem)] font-bold leading-[1.04] tracking-[-0.02em] text-on-dark">
+            <h2 className="mt-5 text-[clamp(2rem,4.5vw,3.4rem)] font-semibold leading-[1.04] tracking-[-0.02em] text-on-dark">
               {cta.heading}
             </h2>
             <p className="mt-5 max-w-xl text-sm font-normal text-on-dark-soft">{cta.body}</p>

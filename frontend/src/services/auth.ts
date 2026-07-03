@@ -12,12 +12,7 @@ import api from '../lib/axios';
 import { pendingSignup } from '../lib/pending-signup';
 import type { AuthUser, Role, SignupRole, SyncResponse } from '../types';
 
-/**
- * Register/refresh the current Firebase user in the local Postgres database.
- * The backend creates the row on first call (using `role`/`full_name`) and is
- * idempotent thereafter, returning the user's authoritative id + role.
- * Relies on the axios interceptor to attach the Firebase ID token.
- */
+/** Idempotently register/refresh the Firebase user in Postgres; returns id + role. */
 export async function syncUser(params?: { role?: SignupRole; fullName?: string }): Promise<AuthUser> {
   const body: { role?: Role; full_name?: string } = {};
   if (params?.role) body.role = params.role;
@@ -39,18 +34,14 @@ export async function loginWithEmail(email: string, password: string): Promise<v
   await signInWithEmailAndPassword(auth, email, password);
 }
 
-/**
- * Firebase email/password sign-up. Sets the display name and stashes the chosen
- * role so the AuthProvider syncs it to the backend on the resulting auth change.
- */
+/** Firebase email/password sign-up; sets display name and stashes role for AuthProvider sync. */
 export async function signupWithEmail(
   email: string,
   password: string,
   fullName: string,
   role: SignupRole
 ): Promise<void> {
-  // Stash BEFORE creating the account: createUser triggers onAuthStateChanged,
-  // and the AuthProvider consumes this to sync the user with the right role.
+  // Stash before createUser fires onAuthStateChanged, so AuthProvider syncs the right role.
   pendingSignup.set({ role, fullName });
   const credential = await createUserWithEmailAndPassword(auth, email, password);
   await updateProfile(credential.user, { displayName: fullName });
@@ -63,10 +54,7 @@ export async function loginWithGoogle(): Promise<void> {
   await signInWithPopup(auth, googleProvider);
 }
 
-/**
- * Firebase Google sign-up. Stashes the chosen role so the AuthProvider syncs it
- * to the backend on the resulting auth change.
- */
+/** Firebase Google sign-up; stashes role for AuthProvider to sync on the next auth change. */
 export async function signupWithGoogle(role: SignupRole): Promise<void> {
   // Stash the role. The full name will be extracted from the Google profile by the AuthProvider
   pendingSignup.set({ role, fullName: '' });

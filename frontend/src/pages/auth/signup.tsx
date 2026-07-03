@@ -68,7 +68,7 @@ export function SignupPage() {
                     on ? 'border-primary bg-primary-soft' : 'border-line-strong hover:border-primary'
                   }`}
                 >
-                  <span className="text-sm font-bold text-ink">{r.label}</span>
+                  <span className="text-sm font-semibold text-ink">{r.label}</span>
                   <span className="text-[12px] font-medium text-muted">{r.hint}</span>
                 </button>
               );

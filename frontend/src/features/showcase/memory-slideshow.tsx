@@ -3,19 +3,7 @@ import type { ReactElement } from 'react';
 import * as THREE from 'three';
 import gsap from 'gsap';
 
-/**
- * MemorySlideshow — a cinematic reminiscence reel. Each photo drifts with a slow
- * Ken Burns zoom/pan and cross-dissolves into the next, captions rising in over a
- * dark engineered stage. Built for dementia patients and their families to relive
- * moments together, so motion is calm and unhurried, never jarring.
- *
- * three.js full-screen shader quad (same lifecycle discipline as hero-visual.tsx):
- * two textures mixed by `uProgress` (GSAP-tweened per transition), each fitted with
- * a "cover" UV map and animated by a continuous, seed-varied Ken Burns. Falls back
- * to a plain CSS cross-fade for reduced-motion / no-WebGL.
- *
- * Presentational only: the parent feeds real, already-loaded photo URLs.
- */
+/** Cinematic photo slideshow: three.js Ken Burns + cross-dissolve, reduced-motion CSS fallback. */
 
 export interface Slide {
   id: string;

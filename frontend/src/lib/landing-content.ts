@@ -1,8 +1,4 @@
-/**
- * All landing-page copy lives here, typed and centralised.
- * House style: no full stops in display copy, bold and plainspoken.
- * See frontend/skills/landing-copy/SKILL.md for the voice + section frameworks.
- */
+/** Centralised, typed landing-page copy; no full stops in display copy (see skills/landing-copy/SKILL.md). */
 
 export interface HeroContent {
   eyebrow: string;
@@ -70,7 +66,7 @@ export const landingContent: LandingContent = {
     eyebrow: 'Built on Cognee Memory AI',
     titleLead: 'A',
     titleAccent: 'living memory',
-    titleTail: 'for the people you love',
+    titleTail: 'for the people you love.',
     subtitle:
       'Recall turns photos, voices and family stories into a connected memory graph, so a loved one living with dementia can find their way back to the moments that made them',
     primaryCta: 'Start for free',

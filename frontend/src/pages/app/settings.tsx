@@ -60,7 +60,7 @@ function CareCircleCard({ patientId }: { patientId: number }) {
           <div className="flex flex-col gap-2">
             <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-soft">Current Invite Code</span>
             <div className="flex items-center justify-between gap-3 border border-line bg-canvas p-3">
-              <code className="font-mono text-xl font-bold tracking-[0.3em] text-primary">{data.invite_code}</code>
+              <code className="font-mono text-xl font-semibold tracking-[0.3em] text-primary">{data.invite_code}</code>
               <button
                 type="button"
                 onClick={() => {

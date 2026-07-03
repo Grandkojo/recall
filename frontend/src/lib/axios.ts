@@ -1,10 +1,7 @@
 import axios, { type InternalAxiosRequestConfig } from 'axios';
 import { auth } from './firebase';
 
-/**
- * Backend base URL. The Recall backend serves under /api/... on port 8001
- * (see backend/readme.md). Override with VITE_API_URL for other environments.
- */
+/** Backend base URL (serves /api/... on :8001); override with VITE_API_URL. */
 export const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:8001';
 
 const api = axios.create({
@@ -15,11 +12,7 @@ const api = axios.create({
 
 type RetriableConfig = InternalAxiosRequestConfig & { _retry?: boolean };
 
-/**
- * Attach the current Firebase ID token to every request. The SDK returns a
- * cached token and transparently refreshes it when it's close to expiry, so
- * there is no separate refresh-token flow to manage.
- */
+// Attach the current Firebase ID token to every request (SDK auto-refreshes near expiry).
 api.interceptors.request.use(async (config) => {
   const user = auth.currentUser;
   if (user) {
@@ -29,11 +22,7 @@ api.interceptors.request.use(async (config) => {
   return config;
 });
 
-/**
- * On a 401, force-refresh the ID token once and retry — covers the case where
- * a cached token expired mid-session. If the forced refresh still fails, the
- * session is genuinely invalid and the AuthProvider will react to sign-out.
- */
+// On 401, force-refresh the token once and retry; if that fails too, sign out.
 api.interceptors.response.use(
   (res) => res,
   async (error) => {

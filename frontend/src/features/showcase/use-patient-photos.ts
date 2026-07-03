@@ -3,12 +3,7 @@ import { useGetPatientMemories } from '../../hooks/useMemories';
 import type { Media } from '../../types';
 import type { Slide } from './memory-slideshow';
 
-/* ─────────────────────────────────────────────────────────────────────────
-   TEMP demo reel — bundled sample photos so we can see the slideshow motion
-   before real uploads exist. Shown ONLY when the patient has zero ready photos.
-   Remove this block (and the `?? DEMO_SLIDES` fallback below) once real photos
-   are flowing — the real uploaded images are the source of truth.
-   ───────────────────────────────────────────────────────────────────────── */
+/* TEMP demo reel: sample photos shown only when the patient has zero ready photos; remove with the DEMO_SLIDES fallback once real uploads flow. */
 import demo1 from '../../assets/memories/memory-1.jpg';
 import demo2 from '../../assets/memories/memory-2.jpg';
 import demo3 from '../../assets/memories/memory-3.jpg';
@@ -31,11 +26,7 @@ export interface PatientPhotos {
   hasPatient: boolean;
 }
 
-/**
- * Derives the slideshow's photo slides from a patient's real, processed uploads.
- * Only `photo` memories that finished processing (`status === 'ready'` with a real
- * hosted URL) can be shown — anything still "processing…" has no image yet.
- */
+/** Derives slideshow slides from a patient's ready photo uploads (status 'ready', hosted URL). */
 export function usePatientPhotos(patientId: number): PatientPhotos {
   const { data, isLoading } = useGetPatientMemories(patientId);
 

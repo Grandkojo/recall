@@ -26,7 +26,7 @@ export function StatsBar() {
               <div className="mb-4 text-primary">
                 <HugeiconsIcon icon={STAT_ICONS[i]} size={30} color="currentColor" strokeWidth={1.8} />
               </div>
-              <p className="text-[clamp(2.4rem,5vw,3.4rem)] font-bold leading-none tracking-tight text-ink">
+              <p className="text-[clamp(2.4rem,5vw,3.4rem)] font-semibold leading-none tracking-tight text-ink">
                 <CountUp value={stat.value} />
               </p>
               <p className="mt-3 max-w-[24ch] text-sm font-normal text-muted">{stat.label}</p>

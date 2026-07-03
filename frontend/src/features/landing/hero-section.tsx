@@ -49,7 +49,7 @@ export function HeroSection() {
               {hero.eyebrow}
             </span>
 
-            <h1 className="mt-5 text-[clamp(2.3rem,4.4vw,3.6rem)] font-bold leading-[1.05] tracking-[-0.025em] text-ink">
+            <h1 className="mt-5 text-[clamp(2.3rem,4.4vw,3.6rem)] font-semibold leading-[1.05] tracking-[-0.025em] text-ink">
               {hero.titleLead} <span className="text-primary">{hero.titleAccent}</span> {hero.titleTail}
             </h1>
 

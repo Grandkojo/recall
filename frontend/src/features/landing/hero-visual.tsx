@@ -3,17 +3,7 @@ import type { ReactElement } from 'react';
 import * as THREE from 'three';
 import gsap from 'gsap';
 
-/**
- * Hero centrepiece — "Reassembling memories". Fragments of light drift apart,
- * scattered (what dementia does to a life), then a slow recall-breath pulls them
- * back: they cohere into one connected whole — links forming as the moments piece
- * back together, a bright core blooming at the point of cohesion — before gently
- * releasing again. Brand blues and teal on a dark panel, no warm tones.
- * The scatter↔cohere breath is Recall's whole story, told without words.
- *
- * three.js on a dark panel, same lifecycle as memory-stack-canvas.tsx, with a
- * static SVG fallback for reduced-motion / no-WebGL. Palette from @theme.
- */
+/** Hero visual: three.js fragments scatter↔cohere into a linked whole; SVG reduced-motion fallback. */
 
 const BLUE_SOFT = new THREE.Color(0xa9c6e2);
 const BLUE_LIGHT = new THREE.Color(0x6aa9e6);

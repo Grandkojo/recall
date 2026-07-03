@@ -11,6 +11,10 @@ def run_async(coro):
     loop = asyncio.get_event_loop()
     return loop.run_until_complete(coro)
 
+import cognee
+cognee.config.set_embedding_provider("openai")
+cognee.config.set_embedding_model("text-embedding-3-small")
+
 @celery_app.task
 def process_media_upload(file_path: str, media_type: str, patient_id: int, media_id: int, caption: str = None):
     """
@@ -31,7 +35,6 @@ def process_media_upload(file_path: str, media_type: str, patient_id: int, media
     db.close()
     
     try:
-        import cognee
         memory_text = caption or ""
         if transcript:
             memory_text += f"\nTranscript: {transcript}"

@@ -48,8 +48,27 @@ async def add_memory(
         background_tasks.add_task(process_media_upload, temp_path, media_type, patient_id, db_media.id, caption)
     else:
         # text only memory, run asynchronously
-        import asyncio
-        asyncio.create_task(cognee.remember(caption or ""))
+        async def process_text_memory(text: str, m_id: int):
+            from app.core.database import SessionLocal
+            try:
+                await cognee.remember(text)
+                
+                db_session = SessionLocal()
+                media_record = db_session.query(Media).filter(Media.id == m_id).first()
+                if media_record:
+                    media_record.status = "ready"
+                    db_session.commit()
+                db_session.close()
+            except Exception as e:
+                print("Cognee remember error:", e)
+                db_session = SessionLocal()
+                media_record = db_session.query(Media).filter(Media.id == m_id).first()
+                if media_record:
+                    media_record.status = "failed"
+                    db_session.commit()
+                db_session.close()
+
+        background_tasks.add_task(process_text_memory, caption or "", db_media.id)
 
     return {"message": "Memory upload initiated", "media_id": db_media.id}
 

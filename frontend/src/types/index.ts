@@ -67,6 +67,7 @@ export interface UploadMemoryResponse {
 export interface QueryMemoriesResponse {
   query: string;
   results: unknown;
+  answer?: string;
 }
 
 /** POST /api/memories/enrich and DELETE /api/memories/{id} */

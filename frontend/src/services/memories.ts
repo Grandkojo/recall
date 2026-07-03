@@ -37,9 +37,14 @@ export async function queryMemories(q: string, patientId: number): Promise<Query
   return data;
 }
 
-/** GET /api/memories/patient/{id} — fetches all raw memories for a patient. */
 export async function getPatientMemories(patientId: number): Promise<Media[]> {
   const { data } = await api.get<Media[]>(`/api/memories/patient/${patientId}`);
+  return data;
+}
+
+/** GET /api/memories/history/{id} — fetches recent search queries. */
+export async function getQueryHistory(patientId: number): Promise<string[]> {
+  const { data } = await api.get<string[]>(`/api/memories/history/${patientId}`);
   return data;
 }
 

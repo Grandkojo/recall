@@ -76,13 +76,49 @@ async def add_memory(
 async def query_memories(
     q: str, 
     patient_id: int,
+    db: Session = Depends(get_db),
     user: dict = Depends(get_current_user)
 ):
     """
     Search/Reminisce interface for patients and caregivers.
     """
+    # Save search history
+    from app.models.search_history import SearchHistory
+    latest = db.query(SearchHistory).filter(SearchHistory.patient_id == patient_id).order_by(SearchHistory.created_at.desc()).first()
+    if not latest or latest.query != q:
+        history = SearchHistory(patient_id=patient_id, query=q)
+        db.add(history)
+        db.commit()
+
     results = await cognee.recall(q)
-    return {"query": q, "results": results}
+    
+    from app.services.openai_service import synthesize_answer
+    friendly_answer = synthesize_answer(q, results)
+    
+    return {"query": q, "results": results, "answer": friendly_answer}
+
+@router.get("/history/{patient_id}")
+async def get_query_history(
+    patient_id: int,
+    db: Session = Depends(get_db),
+    user: dict = Depends(get_current_user)
+):
+    """
+    Get recent unique queries for the patient.
+    """
+    from app.models.search_history import SearchHistory
+    history = db.query(SearchHistory).filter(SearchHistory.patient_id == patient_id).order_by(SearchHistory.created_at.desc()).limit(20).all()
+    
+    seen = set()
+    unique_queries = []
+    for h in history:
+        if h.query not in seen:
+            unique_queries.append(h.query)
+            seen.add(h.query)
+        if len(unique_queries) >= 10:
+            break
+            
+    return unique_queries
 
 @router.get("/patient/{patient_id}")
 async def get_patient_memories(

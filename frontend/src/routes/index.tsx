@@ -10,6 +10,7 @@ import { AppLayout } from '../pages/app/app-layout';
 import { Dashboard } from '../pages/app/dashboard';
 import { AddMemoryPage } from '../pages/app/add-memory';
 import { SettingsPage } from '../pages/app/settings';
+import { MemoryShowcasePage } from '../pages/app/showcase';
 
 export const router = createBrowserRouter([
   {
@@ -33,6 +34,7 @@ export const router = createBrowserRouter([
         children: [
           { index: true, element: <Dashboard /> },
           { path: 'add-memory', element: <AddMemoryPage /> },
+          { path: 'showcase', element: <MemoryShowcasePage /> },
           { path: 'settings', element: <SettingsPage /> },
         ]
       }

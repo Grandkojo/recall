@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 load_dotenv()
+os.environ["ENABLE_BACKEND_ACCESS_CONTROL"] = "false"
 import cognee
 
 def setup_cognee():

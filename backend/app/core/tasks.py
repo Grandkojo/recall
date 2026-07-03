@@ -6,33 +6,21 @@ from app.models.media import Media
 import os
 import asyncio
 
-def run_async(coro):
-    """Helper to run async code inside sync celery/background tasks."""
-    try:
-        loop = asyncio.get_event_loop()
-    except RuntimeError:
-        loop = None
-        
-    if loop and loop.is_running():
-        # If there's an already running loop in this thread, we shouldn't use run()
-        # but in FastAPI BackgroundTasks, there usually isn't one.
-        return loop.create_task(coro)
-    else:
-        return asyncio.run(coro)
-
-from app.core.cognee_setup import setup_cognee
+from starlette.concurrency import run_in_threadpool
 import cognee
+from app.core.cognee_setup import setup_cognee
+
 setup_cognee()
 
-def process_media_upload(file_path: str, media_type: str, patient_id: int, media_id: int, caption: str = None):
+async def process_media_upload(file_path: str, media_type: str, patient_id: int, media_id: int, caption: str = None):
     """
     Background task to process uploaded media.
     """
-    secure_url = upload_media(file_path)
+    secure_url = await run_in_threadpool(upload_media, file_path)
     
     transcript = ""
     if media_type in ["voice", "video"]:
-        transcript = transcribe_audio(file_path)
+        transcript = await run_in_threadpool(transcribe_audio, file_path)
         
     db = SessionLocal()
     media_record = db.query(Media).filter(Media.id == media_id).first()
@@ -47,7 +35,7 @@ def process_media_upload(file_path: str, media_type: str, patient_id: int, media
         if transcript:
             memory_text += f"\nTranscript: {transcript}"
             
-        run_async(cognee.remember(memory_text))
+        await cognee.remember(memory_text)
         
         # Mark as ready
         db = SessionLocal()
@@ -70,12 +58,12 @@ def process_media_upload(file_path: str, media_type: str, patient_id: int, media
         
     return {"media_id": media_id, "url": secure_url}
 
-def run_cognee_improve():
+async def run_cognee_improve():
     """
     Background task to enrich the Cognee knowledge graph.
     """
     try:
         import cognee
-        run_async(cognee.improve())
+        await cognee.improve()
     except Exception as e:
         print("Cognee improve error:", e)

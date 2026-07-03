@@ -124,7 +124,7 @@ class JoinRequest(BaseModel):
 def join_care_circle(
     req: JoinRequest,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_role([RoleEnum.FAMILY_CONTRIBUTOR.value, RoleEnum.CAREGIVER.value]))
+    current_user: User = Depends(require_role([RoleEnum.FAMILY_CONTRIBUTOR.value, RoleEnum.CAREGIVER.value, RoleEnum.PATIENT.value]))
 ):
     """
     Allows a user to join a patient's care circle using an invite code.

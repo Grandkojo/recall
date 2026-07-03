@@ -13,3 +13,5 @@ python-multipart
 python-jose[cryptography]
 passlib[bcrypt]
 pydantic-settings
+neo4j
+pgvector

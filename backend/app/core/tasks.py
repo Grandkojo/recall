@@ -15,7 +15,6 @@ import cognee
 cognee.config.set_embedding_provider("openai")
 cognee.config.set_embedding_model("text-embedding-3-small")
 
-@celery_app.task
 def process_media_upload(file_path: str, media_type: str, patient_id: int, media_id: int, caption: str = None):
     """
     Background task to process uploaded media.
@@ -48,7 +47,6 @@ def process_media_upload(file_path: str, media_type: str, patient_id: int, media
         
     return {"media_id": media_id, "url": secure_url}
 
-@celery_app.task
 def run_cognee_improve():
     """
     Background task to enrich the Cognee knowledge graph.

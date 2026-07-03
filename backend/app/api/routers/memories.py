@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, UploadFile, File, Form, HTTPException
+from fastapi import APIRouter, Depends, UploadFile, File, Form, HTTPException, BackgroundTasks
 from sqlalchemy.orm import Session
 from app.api.deps import get_db, require_role, get_current_user
 from app.core.tasks import process_media_upload, run_cognee_improve
@@ -14,6 +14,7 @@ os.makedirs("temp_uploads", exist_ok=True)
 
 @router.post("/")
 async def add_memory(
+    background_tasks: BackgroundTasks,
     patient_id: int = Form(...),
     media_type: str = Form(...), # photo, voice, video, text
     caption: str = Form(None),
@@ -44,7 +45,7 @@ async def add_memory(
         with open(temp_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
             
-        process_media_upload.delay(temp_path, media_type, patient_id, db_media.id, caption)
+        background_tasks.add_task(process_media_upload, temp_path, media_type, patient_id, db_media.id, caption)
     else:
         # text only memory, run asynchronously
         import asyncio
@@ -78,12 +79,13 @@ async def get_patient_memories(
 
 @router.post("/enrich")
 async def enrich_graph(
+    background_tasks: BackgroundTasks,
     user: dict = Depends(require_role(["CAREGIVER"]))
 ):
     """
     Trigger a background graph enrichment job.
     """
-    run_cognee_improve.delay()
+    background_tasks.add_task(run_cognee_improve)
     return {"message": "Graph enrichment task started"}
 
 @router.delete("/{media_id}")

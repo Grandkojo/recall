@@ -15,14 +15,7 @@ export interface UploadMemoryInput {
   file?: File | null;
 }
 
-/**
- * POST /api/memories/ — multipart upload. Returns immediately with a media_id;
- * the backend transcodes/transcribes and ingests into the Cognee graph via
- * Celery in the background, so the memory is "processing" for a short while.
- *
- * Content-Type is set to multipart/form-data so axios sends the FormData as-is
- * (rather than JSON-serializing it); the browser fills in the boundary.
- */
+/** POST /api/memories/ — multipart upload; returns media_id while backend ingests in background. */
 export async function uploadMemory(input: UploadMemoryInput): Promise<UploadMemoryResponse> {
   const form = new FormData();
   form.append('patient_id', String(input.patientId));
@@ -36,10 +29,7 @@ export async function uploadMemory(input: UploadMemoryInput): Promise<UploadMemo
   return data;
 }
 
-/**
- * GET /api/memories/query — semantic "reminisce" search over the patient's
- * memory graph (cognee.recall). `results` is free-form; render it defensively.
- */
+/** GET /api/memories/query — semantic search over the patient graph; results are free-form. */
 export async function queryMemories(q: string, patientId: number): Promise<QueryMemoriesResponse> {
   const { data } = await api.get<QueryMemoriesResponse>('/api/memories/query', {
     params: { q, patient_id: patientId },

@@ -1,22 +1,15 @@
-/**
- * Types mirroring the Recall FastAPI backend exactly.
- * Source of truth: backend/app/models + backend/app/api/routers.
- * IDs are integers, roles are UPPERCASE, media_type is the raw backend value.
- */
+/** Types mirroring the Recall FastAPI backend (backend/app/models + routers). */
 
 /** backend: app/models/user.py -> RoleEnum */
 export type Role = 'CAREGIVER' | 'FAMILY_CONTRIBUTOR' | 'PATIENT';
 
-/** Roles allowed to sign up from the frontend (PATIENT accounts are provisioned by a caregiver). */
-export type SignupRole = Extract<Role, 'CAREGIVER' | 'FAMILY_CONTRIBUTOR'>;
+/** Roles allowed to sign up from the frontend. Patients self-sign-up too, then link via an invite code. */
+export type SignupRole = Role;
 
 /** backend: app/models/media.py -> Media.media_type values (photo, voice, video, text) */
 export type MediaType = 'photo' | 'voice' | 'video' | 'text';
 
-/**
- * The authenticated user as our app knows it: the Firebase identity merged
- * with the local profile returned by POST /api/auth/sync.
- */
+/** Authenticated user: Firebase identity merged with the profile from POST /api/auth/sync. */
 export interface AuthUser {
   /** local PostgreSQL user id (integer) */
   userId: number;
@@ -70,11 +63,7 @@ export interface UploadMemoryResponse {
   media_id: number;
 }
 
-/**
- * GET /api/memories/query
- * `results` is whatever cognee.recall() returns — shape is not guaranteed by
- * the backend, so we keep it unknown and render defensively.
- */
+/** GET /api/memories/query — results is unknown (cognee.recall shape not guaranteed). */
 export interface QueryMemoriesResponse {
   query: string;
   results: unknown;

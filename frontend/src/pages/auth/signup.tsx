@@ -9,6 +9,7 @@ import type { SignupRole } from '../../types';
 const ROLES: { value: SignupRole; label: string; hint: string }[] = [
   { value: 'CAREGIVER', label: 'Caregiver', hint: 'I manage memories for a loved one' },
   { value: 'FAMILY_CONTRIBUTOR', label: 'Family member', hint: 'I add photos and stories' },
+  { value: 'PATIENT', label: 'I am the patient', hint: 'I want to look back on my memories' },
 ];
 
 export function SignupPage() {
@@ -54,7 +55,7 @@ export function SignupPage() {
         {/* Role selector — the two account types */}
         <div>
           <span className="text-[12px] font-semibold uppercase tracking-[0.14em] text-ink-soft">I am a</span>
-          <div className="mt-1.5 grid grid-cols-2 gap-3">
+          <div className="mt-1.5 grid grid-cols-1 gap-3 sm:grid-cols-3">
             {ROLES.map((r) => {
               const on = role === r.value;
               return (
@@ -67,7 +68,7 @@ export function SignupPage() {
                     on ? 'border-primary bg-primary-soft' : 'border-line-strong hover:border-primary'
                   }`}
                 >
-                  <span className="text-sm font-bold text-ink">{r.label}</span>
+                  <span className="text-sm font-semibold text-ink">{r.label}</span>
                   <span className="text-[12px] font-medium text-muted">{r.hint}</span>
                 </button>
               );

@@ -1,0 +1,5 @@
+# Shell scripts must stay LF, or they break inside Linux containers:
+# a Windows CRLF in the shebang (#!/bin/bash\r) makes the kernel fail with
+# "exec ./start.sh: no such file or directory".
+# This overrides any local core.autocrlf setting for *.sh on every machine.
+*.sh text eol=lf

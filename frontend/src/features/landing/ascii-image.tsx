@@ -12,12 +12,7 @@ interface AsciiImageProps {
   brightnessBoost?: number;
 }
 
-/**
- * Renders a photo as live, blue-tinted ASCII art (WebGL) with mouse parallax,
- * a reveal sweep and glitch bands — the supermemory image treatment, via the
- * landing-effects package. Sits over a dark panel so the glyphs glow.
- * Falls back to a plain <img> when the user prefers reduced motion.
- */
+/** Photo as live WebGL ASCII art with parallax/glitch; plain <img> fallback for reduced-motion. */
 export function AsciiImage({
   src,
   alt = '',

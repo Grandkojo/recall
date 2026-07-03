@@ -35,7 +35,7 @@ export function AppLayout() {
           <div className="flex min-w-0 items-center gap-3">
             <RecallMark />
             <div className="min-w-0 leading-tight">
-              <p className="text-[17px] font-bold tracking-tight text-ink">Recall</p>
+              <p className="text-[17px] font-semibold tracking-tight text-ink">Recall</p>
               <p className="max-w-[190px] truncate text-[12px] font-medium text-muted sm:max-w-none">
                 {user?.fullName ?? user?.email}
                 {role && <span className="ml-1.5 text-primary">· {role.replace('_', ' ')}</span>}

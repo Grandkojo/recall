@@ -12,7 +12,6 @@ export interface HeroContent {
   subtitle: string;
   primaryCta: string;
   secondaryCta: string;
-  trust: string[];
 }
 
 export interface Stat {
@@ -63,21 +62,19 @@ export interface LandingContent {
     heading: string;
     body: string;
     button: string;
-    note: string;
   };
 }
 
 export const landingContent: LandingContent = {
   hero: {
-    eyebrow: 'Built on Cognee — Memory AI',
+    eyebrow: 'Built on Cognee Memory AI',
     titleLead: 'A',
     titleAccent: 'living memory',
     titleTail: 'for the people you love',
     subtitle:
-      'Recall turns photos, voices and family stories into a connected memory graph — so a loved one living with dementia can find their way back to the moments that made them',
+      'Recall turns photos, voices and family stories into a connected memory graph, so a loved one living with dementia can find their way back to the moments that made them',
     primaryCta: 'Start for free',
     secondaryCta: 'See how it works',
-    trust: ['Free to start', 'No card required', 'Private & secure'],
   },
 
   stats: [
@@ -94,7 +91,7 @@ export const landingContent: LandingContent = {
       {
         index: '01',
         title: 'Capture the moment',
-        body: 'Add a photo, record a voice note, or write down a story — family can contribute from anywhere, and every memory counts',
+        body: 'Add a photo, record a voice note, or write down a story, family can contribute from anywhere, and every memory counts',
       },
       {
         index: '02',
@@ -116,7 +113,7 @@ export const landingContent: LandingContent = {
     items: [
       {
         title: 'Daily orientation briefs',
-        body: 'A gentle, auto-written summary of who, where and when — ready to read aloud each morning',
+        body: 'A gentle, auto-written summary of who, where and when, ready to read aloud each morning',
       },
       {
         title: 'Voice-first reminiscence',
@@ -128,7 +125,7 @@ export const landingContent: LandingContent = {
       },
       {
         title: 'Private by design',
-        body: "Each person's memories are theirs alone — invite-only, never shared, never sold",
+        body: "Each person's memories are theirs alone, invite-only, never shared, never sold",
       },
     ],
   },
@@ -137,7 +134,7 @@ export const landingContent: LandingContent = {
     eyebrow: 'The memory stack',
     heading: 'Five layers, one living memory',
     subheading:
-      'Every memory passes through the same pipeline — and the graph is where it all comes together',
+      'Every memory passes through the same pipeline and the graph is where it all comes together',
     layers: [
       { index: '01', name: 'Capture', blurb: 'Photos, voice notes, videos and stories come in from the whole family' },
       { index: '02', name: 'Transcribe', blurb: 'Whisper turns every voice and video into searchable, gentle text' },
@@ -149,8 +146,7 @@ export const landingContent: LandingContent = {
 
   cta: {
     heading: 'Start preserving what matters today',
-    body: "Set up your loved one's memory in minutes — it's free to begin",
+    body: "Set up your loved one's memory in minutes, it's free to begin",
     button: 'Create your free account',
-    note: 'No credit card required',
   },
 };

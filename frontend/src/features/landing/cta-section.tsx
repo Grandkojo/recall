@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom';
 import { Container } from '../../components/layout/Container';
 import { btnCls } from '../../components/ui';
 import { landingContent } from '../../lib/landing-content';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { ArrowRight01Icon } from '@hugeicons/core-free-icons';
 
 export function CtaSection() {
   const { cta } = landingContent;
@@ -43,11 +45,8 @@ export function CtaSection() {
           <div className="flex flex-col items-start gap-3">
             <Link to="/signup" className={btnCls('on-dark', 'lg', 'justify-center')}>
               {cta.button}
-              <span aria-hidden="true">→</span>
+              <HugeiconsIcon icon={ArrowRight01Icon} size={18} color="currentColor" strokeWidth={2} />
             </Link>
-            <span className="text-[12px] font-semibold uppercase tracking-[0.14em] text-on-dark-soft">
-              {cta.note}
-            </span>
           </div>
         </div>
       </Container>

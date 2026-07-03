@@ -5,6 +5,7 @@ import {
   queryMemories,
   uploadMemory,
   getPatientMemories,
+  getQueryHistory,
   type UploadMemoryInput,
 } from '../services/memories';
 import { queryKeys } from '../lib/queryKeys';
@@ -31,6 +32,14 @@ export function useGetPatientMemories(patientId: number) {
     queryFn: () => getPatientMemories(patientId),
     enabled: patientId > 0,
     refetchInterval: 10000,
+  });
+}
+
+export function useQueryHistory(patientId: number) {
+  return useQuery<string[]>({
+    queryKey: ['memories', 'history', patientId],
+    queryFn: () => getQueryHistory(patientId),
+    enabled: patientId > 0,
   });
 }
 

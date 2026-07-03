@@ -1,8 +1,8 @@
-import { useState, type FormEvent } from 'react';
+import { useState, useEffect, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, TextField } from '../../components/ui';
 import { useAuth } from '../../hooks/useAuth';
-import { useQueryMemories } from '../../hooks/useMemories';
+import { useQueryMemories, useQueryHistory } from '../../hooks/useMemories';
 import { useGetPatients, useCreatePatient, useJoinCareCircle } from '../../hooks/usePatients';
 import { usePatientStore } from '../../store/patientStore';
 import { Card, FieldLabel, inputCls, PlusIcon, SettingsIcon, SlideshowIcon, ArrowRightIcon } from './shared';
@@ -141,11 +141,16 @@ function PatientOnboarding() {
 function ReminisceCard({ patientId }: { patientId: number }) {
   const [draft, setDraft] = useState('');
   const [q, setQ] = useState('');
+  const { data: history = [], refetch: refetchHistory } = useQueryHistory(patientId);
   const { data, isFetching, isError, error } = useQueryMemories(patientId, q);
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
-    setQ(draft);
+    const query = draft.trim();
+    setQ(query);
+    if (!query) {
+      refetchHistory(); // fetch latest history when clearing search
+    }
   };
 
   return (
@@ -157,7 +162,7 @@ function ReminisceCard({ patientId }: { patientId: number }) {
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
         />
-        <Button type="submit" size="lg" disabled={!draft.trim()} className="w-full sm:w-auto sm:px-8">
+        <Button type="submit" size="lg" className="w-full sm:w-auto sm:px-8">
           Recall
         </Button>
       </form>
@@ -171,6 +176,26 @@ function ReminisceCard({ patientId }: { patientId: number }) {
                 ? 'Select a patient in Settings, then enter a memory prompt to explore their life graph.'
                 : 'Enter a memory prompt above to explore their life graph.'}
             </p>
+            {history.length > 0 && patientId > 0 && (
+              <div className="mt-6 w-full max-w-lg">
+                <h4 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted">Recent Searches</h4>
+                <div className="flex flex-wrap justify-center gap-2">
+                  {history.map((h, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={() => {
+                        setDraft(h);
+                        setQ(h);
+                      }}
+                      className="rounded-full border border-line-strong bg-white px-3.5 py-1.5 text-[13px] font-medium text-ink transition-colors hover:border-primary hover:text-primary"
+                    >
+                      {h}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
         {isFetching && (
@@ -182,9 +207,15 @@ function ReminisceCard({ patientId }: { patientId: number }) {
           <p className="text-[13px] font-medium text-error">{error instanceof Error ? error.message : 'Search failed'}</p>
         )}
         {data && !isFetching && (
-          <pre className="animate-rise whitespace-pre-wrap font-sans text-[14px] leading-relaxed text-ink-soft">
-            {typeof data.results === 'string' ? data.results : JSON.stringify(data.results, null, 2)}
-          </pre>
+          <div className="animate-rise whitespace-pre-wrap font-sans text-[15px] leading-relaxed text-ink-soft">
+            {data.answer ? (
+              <p>{data.answer}</p>
+            ) : (
+              <pre className="text-[14px]">
+                {typeof data.results === 'string' ? data.results : JSON.stringify(data.results, null, 2)}
+              </pre>
+            )}
+          </div>
         )}
       </div>
     </Card>

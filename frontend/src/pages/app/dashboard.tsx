@@ -2,7 +2,7 @@ import { useState, useEffect, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, TextField } from '../../components/ui';
 import { useAuth } from '../../hooks/useAuth';
-import { useQueryMemories } from '../../hooks/useMemories';
+import { useQueryMemories, useQueryHistory } from '../../hooks/useMemories';
 import { useGetPatients, useCreatePatient, useJoinCareCircle } from '../../hooks/usePatients';
 import { usePatientStore } from '../../store/patientStore';
 import { Card, FieldLabel, inputCls, PlusIcon, SettingsIcon, SlideshowIcon, ArrowRightIcon } from './shared';
@@ -141,30 +141,16 @@ function PatientOnboarding() {
 function ReminisceCard({ patientId }: { patientId: number }) {
   const [draft, setDraft] = useState('');
   const [q, setQ] = useState('');
-  const [history, setHistory] = useState<string[]>([]);
+  const { data: history = [], refetch: refetchHistory } = useQueryHistory(patientId);
   const { data, isFetching, isError, error } = useQueryMemories(patientId, q);
-
-  useEffect(() => {
-    if (patientId > 0) {
-      const saved = localStorage.getItem(`recall-query-history-${patientId}`);
-      if (saved) {
-        try {
-          setHistory(JSON.parse(saved));
-        } catch (e) {}
-      }
-    }
-  }, [patientId]);
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     const query = draft.trim();
-    if (!query) return;
     setQ(query);
-    
-    // Update history
-    const newHistory = [query, ...history.filter((h) => h !== query)].slice(0, 10);
-    setHistory(newHistory);
-    localStorage.setItem(`recall-query-history-${patientId}`, JSON.stringify(newHistory));
+    if (!query) {
+      refetchHistory(); // fetch latest history when clearing search
+    }
   };
 
   return (
@@ -176,7 +162,7 @@ function ReminisceCard({ patientId }: { patientId: number }) {
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
         />
-        <Button type="submit" size="lg" disabled={!draft.trim()} className="w-full sm:w-auto sm:px-8">
+        <Button type="submit" size="lg" className="w-full sm:w-auto sm:px-8">
           Recall
         </Button>
       </form>
@@ -201,9 +187,6 @@ function ReminisceCard({ patientId }: { patientId: number }) {
                       onClick={() => {
                         setDraft(h);
                         setQ(h);
-                        const newHistory = [h, ...history.filter((item) => item !== h)].slice(0, 10);
-                        setHistory(newHistory);
-                        localStorage.setItem(`recall-query-history-${patientId}`, JSON.stringify(newHistory));
                       }}
                       className="rounded-full border border-line-strong bg-white px-3.5 py-1.5 text-[13px] font-medium text-ink transition-colors hover:border-primary hover:text-primary"
                     >

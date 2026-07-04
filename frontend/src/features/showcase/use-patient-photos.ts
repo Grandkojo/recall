@@ -42,7 +42,7 @@ export function usePatientPhotos(patientId: number): PatientPhotos {
   const isDemo = hasPatient && realSlides.length === 0;
 
   return {
-    slides: realSlides.length > 0 ? realSlides : DEMO_SLIDES, // TEMP: drop DEMO_SLIDES fallback later
+    slides: realSlides,
     isDemo,
     isLoading,
     hasPatient,

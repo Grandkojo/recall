@@ -210,6 +210,8 @@ function ReminisceCard({ patientId }: { patientId: number }) {
           <div className="animate-rise whitespace-pre-wrap font-sans text-[15px] leading-relaxed text-ink-soft">
             {data.answer ? (
               <p>{data.answer}</p>
+            ) : Array.isArray(data.results) && data.results.length > 0 && data.results[0].text ? (
+              <p>{data.results[0].text}</p>
             ) : (
               <pre className="text-[14px]">
                 {typeof data.results === 'string' ? data.results : JSON.stringify(data.results, null, 2)}

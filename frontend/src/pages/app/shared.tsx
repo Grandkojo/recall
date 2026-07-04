@@ -112,3 +112,33 @@ export function SlideshowIcon({ className = '' }: { className?: string }) {
     </svg>
   );
 }
+
+/** Parses [MEDIA_URL: ... MEDIA_TYPE: ...] tags out of AI responses and renders media inline. */
+export function RichTextResponse({ text }: { text: string }) {
+  if (!text) return null;
+  
+  const regex = /\[MEDIA_URL:\s*(.+?)\s*MEDIA_TYPE:\s*(photo|video)\]/g;
+  const matches = [...text.matchAll(regex)];
+  const cleanText = text.replace(regex, '').trim();
+
+  return (
+    <div className="flex flex-col gap-4">
+      <p>{cleanText}</p>
+      {matches.length > 0 && (
+        <div className="mt-2 flex flex-wrap gap-4">
+          {matches.map((match, i) => {
+            const url = match[1];
+            const type = match[2];
+            if (type === 'photo') {
+              return <img key={i} src={url} alt="Memory" className="max-h-80 max-w-full rounded border border-line-strong object-contain shadow-sm" />;
+            }
+            if (type === 'video') {
+              return <video key={i} src={url} controls className="max-h-80 max-w-full rounded border border-line-strong object-contain shadow-sm" />;
+            }
+            return null;
+          })}
+        </div>
+      )}
+    </div>
+  );
+}

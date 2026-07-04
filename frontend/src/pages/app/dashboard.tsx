@@ -5,7 +5,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { useQueryMemories, useQueryHistory } from '../../hooks/useMemories';
 import { useGetPatients, useCreatePatient, useJoinCareCircle } from '../../hooks/usePatients';
 import { usePatientStore } from '../../store/patientStore';
-import { Card, FieldLabel, inputCls, PlusIcon, SettingsIcon, SlideshowIcon, ArrowRightIcon } from './shared';
+import { Card, FieldLabel, inputCls, PlusIcon, SettingsIcon, SlideshowIcon, ArrowRightIcon, RichTextResponse } from './shared';
 import { PatientHome } from './patient-home';
 import reminisceImg from '../../assets/memories/reminisce-empty-state.png';
 import waitingImg from '../../assets/memories/Soothing Minimalist Abstract Background (1).png';
@@ -207,11 +207,11 @@ function ReminisceCard({ patientId }: { patientId: number }) {
           <p className="text-[13px] font-medium text-error">{error instanceof Error ? error.message : 'Search failed'}</p>
         )}
         {data && !isFetching && (
-          <div className="animate-rise whitespace-pre-wrap font-sans text-[15px] leading-relaxed text-ink-soft">
+          <div className="animate-rise text-[15px] leading-relaxed text-ink-soft">
             {data.answer ? (
-              <p>{data.answer}</p>
+              <RichTextResponse text={data.answer} />
             ) : Array.isArray(data.results) && data.results.length > 0 && data.results[0].text ? (
-              <p>{data.results[0].text}</p>
+              <RichTextResponse text={data.results[0].text} />
             ) : (
               <pre className="text-[14px]">
                 {typeof data.results === 'string' ? data.results : JSON.stringify(data.results, null, 2)}

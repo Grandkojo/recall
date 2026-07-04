@@ -5,12 +5,15 @@ import { usePatientPhotos } from '../../features/showcase/use-patient-photos';
 import { MemorySlideshow } from '../../features/showcase/memory-slideshow';
 import { usePatientVoiceMemories } from '../../features/showcase/use-patient-voice';
 import { VoicePlayer } from '../../features/showcase/VoicePlayer';
+import { usePatientVideoMemories } from '../../features/showcase/use-patient-video';
+import { VideoGallery } from '../../features/showcase/VideoGallery';
 import type { Patient } from '../../types';
 
 /** PatientHome: calm large-type screen with a greeting, memory reel, and one ask box. */
 export function PatientHome({ patient, patientId }: { patient: Patient; patientId: number }) {
   const { slides } = usePatientPhotos(patientId);
   const { voices } = usePatientVoiceMemories(patientId);
+  const { videos } = usePatientVideoMemories(patientId);
 
   return (
     <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-7 px-4 pt-8 pb-16 md:px-6 md:pt-12">
@@ -26,6 +29,7 @@ export function PatientHome({ patient, patientId }: { patient: Patient; patientI
 
       <MemorySlideshow slides={slides} autoPlayMs={7000} className="aspect-[16/10] w-full md:aspect-[16/9]" />
 
+      {videos.length > 0 && <VideoGallery videos={videos} />}
       {voices.length > 0 && <VoicePlayer voices={voices} />}
 
       <PatientReminisce patientId={patientId} />
@@ -72,9 +76,17 @@ function PatientReminisce({ patientId }: { patientId: number }) {
             </p>
           )}
           {data && !isFetching && (
-            <p className="animate-rise whitespace-pre-wrap text-lg leading-relaxed text-ink-soft">
-              {typeof data.results === 'string' ? data.results : JSON.stringify(data.results, null, 2)}
-            </p>
+            <div className="animate-rise whitespace-pre-wrap text-lg leading-relaxed text-ink-soft">
+              {data.answer ? (
+                <p>{data.answer}</p>
+              ) : Array.isArray(data.results) && data.results.length > 0 && data.results[0].text ? (
+                <p>{data.results[0].text}</p>
+              ) : (
+                <pre className="text-[14px]">
+                  {typeof data.results === 'string' ? data.results : JSON.stringify(data.results, null, 2)}
+                </pre>
+              )}
+            </div>
           )}
         </div>
       )}

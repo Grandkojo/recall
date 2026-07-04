@@ -3,11 +3,14 @@ import { Button } from '../../components/ui';
 import { useQueryMemories } from '../../hooks/useMemories';
 import { usePatientPhotos } from '../../features/showcase/use-patient-photos';
 import { MemorySlideshow } from '../../features/showcase/memory-slideshow';
+import { usePatientVoiceMemories } from '../../features/showcase/use-patient-voice';
+import { VoicePlayer } from '../../features/showcase/VoicePlayer';
 import type { Patient } from '../../types';
 
 /** PatientHome: calm large-type screen with a greeting, memory reel, and one ask box. */
 export function PatientHome({ patient, patientId }: { patient: Patient; patientId: number }) {
   const { slides } = usePatientPhotos(patientId);
+  const { voices } = usePatientVoiceMemories(patientId);
 
   return (
     <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-7 px-4 pt-8 pb-16 md:px-6 md:pt-12">
@@ -22,6 +25,8 @@ export function PatientHome({ patient, patientId }: { patient: Patient; patientI
       </header>
 
       <MemorySlideshow slides={slides} autoPlayMs={7000} className="aspect-[16/10] w-full md:aspect-[16/9]" />
+
+      {voices.length > 0 && <VoicePlayer voices={voices} />}
 
       <PatientReminisce patientId={patientId} />
     </main>

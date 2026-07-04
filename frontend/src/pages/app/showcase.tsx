@@ -24,11 +24,6 @@ export function MemoryShowcasePage() {
         >
           <ArrowLeftIcon /> Back to Dashboard
         </Link>
-        {isDemo && (
-          <span className="border border-amber/40 bg-amber/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-amber">
-            Sample reel
-          </span>
-        )}
       </div>
 
       <header>
@@ -36,13 +31,19 @@ export function MemoryShowcasePage() {
         <p className="mt-1 text-sm font-normal text-muted">
           {!hasPatient
             ? 'Select a patient in Settings to see their memories.'
-            : isDemo
-              ? 'Upload photos to replace this sample reel with real memories.'
-              : 'A cinematic reel of the moments you have preserved together.'}
+            : 'A cinematic reel of the moments you have preserved together.'}
         </p>
       </header>
 
-      <MemorySlideshow slides={slides} className="aspect-[16/10] w-full md:aspect-[16/9]" />
+      {slides.length > 0 ? (
+        <MemorySlideshow slides={slides} className="aspect-[16/10] w-full md:aspect-[16/9]" />
+      ) : (
+        hasPatient && (
+          <div className="flex aspect-[16/10] w-full flex-col items-center justify-center rounded-xl border border-dashed border-border/50 bg-surface/50 md:aspect-[16/9]">
+            <p className="text-sm font-medium text-muted">Add photo memories to view slideshow</p>
+          </div>
+        )
+      )}
 
       {videos.length > 0 && (
         <div className="mx-auto w-full max-w-4xl pt-6">

@@ -17,3 +17,5 @@ __pycache__/
 *.pyc
 
 backend/migrate_graph.py
+backend/test_search_chunks.py
+backend/test_search.py

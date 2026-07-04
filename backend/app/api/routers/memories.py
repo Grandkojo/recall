@@ -25,6 +25,15 @@ async def add_memory(
     """
     Upload a memory for a patient.
     """
+    if file:
+        max_size = 0
+        if media_type == 'photo': max_size = 5 * 1024 * 1024
+        elif media_type == 'voice': max_size = 10 * 1024 * 1024
+        elif media_type == 'video': max_size = 50 * 1024 * 1024
+        
+        if max_size > 0 and file.size and file.size > max_size:
+            raise HTTPException(status_code=400, detail=f"File too large for {media_type}")
+            
     patient = db.query(Patient).filter(Patient.id == patient_id).first()
     if not patient:
         raise HTTPException(status_code=404, detail="Patient not found")

@@ -7,6 +7,7 @@ import { usePatientVoiceMemories } from '../../features/showcase/use-patient-voi
 import { VoicePlayer } from '../../features/showcase/VoicePlayer';
 import { usePatientVideoMemories } from '../../features/showcase/use-patient-video';
 import { VideoGallery } from '../../features/showcase/VideoGallery';
+import { RichTextResponse } from './shared';
 import type { Patient } from '../../types';
 
 /** PatientHome: calm large-type screen with a greeting, memory reel, and one ask box. */
@@ -76,11 +77,11 @@ function PatientReminisce({ patientId }: { patientId: number }) {
             </p>
           )}
           {data && !isFetching && (
-            <div className="animate-rise whitespace-pre-wrap text-lg leading-relaxed text-ink-soft">
+            <div className="animate-rise text-lg leading-relaxed text-ink-soft">
               {data.answer ? (
-                <p>{data.answer}</p>
+                <RichTextResponse text={data.answer} />
               ) : Array.isArray(data.results) && data.results.length > 0 && data.results[0].text ? (
-                <p>{data.results[0].text}</p>
+                <RichTextResponse text={data.results[0].text} />
               ) : (
                 <pre className="text-[14px]">
                   {typeof data.results === 'string' ? data.results : JSON.stringify(data.results, null, 2)}

@@ -11,7 +11,7 @@ import { ArrowLeftIcon } from './shared';
 /** Memory Showcase: cinematic reel of the active patient's photo memories. */
 export function MemoryShowcasePage() {
   const patientId = usePatientStore((s) => s.patientId);
-  const { slides, isDemo, hasPatient } = usePatientPhotos(patientId);
+  const { slides, hasPatient } = usePatientPhotos(patientId);
   const { voices } = usePatientVoiceMemories(patientId);
   const { videos } = usePatientVideoMemories(patientId);
 

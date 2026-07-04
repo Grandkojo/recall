@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../../components/ui';
-import { useUploadMemory } from '../../hooks/useMemories';
+import { useUploadMemory, useGetPatientMemories } from '../../hooks/useMemories';
 import { MEDIA_TYPES } from '../../services/memories';
 import type { MediaType } from '../../types';
 import { usePatientStore } from '../../store/patientStore';
@@ -17,7 +17,33 @@ export function AddMemoryPage() {
       </Link>
 
       <UploadCard patientId={patientId} />
+      {patientId > 0 && <RecentUploads patientId={patientId} />}
     </main>
+  );
+}
+
+function RecentUploads({ patientId }: { patientId: number }) {
+  const { data: memories } = useGetPatientMemories(patientId);
+  const recent = memories?.slice(0, 5) || [];
+
+  if (recent.length === 0) return null;
+
+  return (
+    <Card title="Recent Uploads" className="border-primary/30 mt-2">
+      <div className="flex flex-col gap-3">
+        {recent.map((m) => {
+          const statusBadge = m.status === 'processing' ? '🔄 Processing' : m.status === 'failed' ? '❌ Failed' : '✅ Ready';
+          return (
+            <div key={m.id} className="flex items-center justify-between border border-line bg-surface p-3">
+              <span className="text-[13px] font-semibold text-ink">
+                [{m.media_type.toUpperCase()}] {m.caption ? (m.caption.length > 40 ? m.caption.substring(0, 40) + '...' : m.caption) : `Memory #${m.id}`}
+              </span>
+              <span className="text-[12px] font-bold tracking-wide text-muted">{statusBadge}</span>
+            </div>
+          );
+        })}
+      </div>
+    </Card>
   );
 }
 
@@ -25,6 +51,7 @@ function UploadCard({ patientId }: { patientId: number }) {
   const [mediaType, setMediaType] = useState<MediaType>('photo');
   const [caption, setCaption] = useState('');
   const [file, setFile] = useState<File | null>(null);
+  const [fileError, setFileError] = useState('');
   const { mutate, isPending, isSuccess, isError, error, data } = useUploadMemory();
 
   const needsFile = mediaType !== 'text';
@@ -46,7 +73,30 @@ function UploadCard({ patientId }: { patientId: number }) {
     );
   };
 
-  const disabled = isPending || patientId <= 0 || (needsFile && !file) || (!needsFile && !caption.trim());
+  const disabled = isPending || patientId <= 0 || (needsFile && !file) || (!needsFile && !caption.trim()) || !!fileError;
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFileError('');
+    const selected = e.target.files?.[0];
+    if (!selected) {
+      setFile(null);
+      return;
+    }
+
+    let maxSize = 0;
+    if (mediaType === 'photo') maxSize = 5 * 1024 * 1024; // 5MB
+    else if (mediaType === 'voice') maxSize = 10 * 1024 * 1024; // 10MB
+    else if (mediaType === 'video') maxSize = 50 * 1024 * 1024; // 50MB
+
+    if (maxSize > 0 && selected.size > maxSize) {
+      setFileError(`File is too large. Max size for ${mediaType} is ${maxSize / (1024 * 1024)}MB.`);
+      setFile(null);
+      e.target.value = ''; // reset input
+      return;
+    }
+
+    setFile(selected);
+  };
 
   return (
     <Card title="Add a memory">
@@ -82,8 +132,9 @@ function UploadCard({ patientId }: { patientId: number }) {
               type="file"
               accept={acceptAttr}
               className="w-full cursor-pointer text-sm text-body transition-colors file:mr-4 file:border-0 file:bg-primary-soft file:px-4 file:py-2.5 file:font-semibold file:text-primary hover:file:bg-primary/20"
-              onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+              onChange={handleFileChange}
             />
+            {fileError && <p className="text-[13px] font-medium text-error">{fileError}</p>}
           </div>
         )}
 

@@ -50,6 +50,8 @@ Here is the raw data retrieved from the patient's knowledge graph (JSON format):
 Please synthesize this raw data into a natural, conversational, and comforting answer.
 If the raw data is empty or does not contain the answer, gently state that you don't have that information in the memory bank yet.
 Keep your answer concise and easy to read. Do not output raw JSON.
+
+CRITICAL INSTRUCTION: If any of the raw data chunks contain a tag formatted like "[MEDIA_URL: <url> MEDIA_TYPE: <type>]", you MUST append that EXACT tag to the very end of your final response if you use that information to answer the question. Do not modify the tag.
 """
 
     try:

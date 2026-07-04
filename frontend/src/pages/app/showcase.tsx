@@ -2,8 +2,10 @@ import { Link } from 'react-router-dom';
 import { usePatientStore } from '../../store/patientStore';
 import { usePatientPhotos } from '../../features/showcase/use-patient-photos';
 import { usePatientVoiceMemories } from '../../features/showcase/use-patient-voice';
+import { usePatientVideoMemories } from '../../features/showcase/use-patient-video';
 import { MemorySlideshow } from '../../features/showcase/memory-slideshow';
 import { VoicePlayer } from '../../features/showcase/VoicePlayer';
+import { VideoGallery } from '../../features/showcase/VideoGallery';
 import { ArrowLeftIcon } from './shared';
 
 /** Memory Showcase: cinematic reel of the active patient's photo memories. */
@@ -11,6 +13,7 @@ export function MemoryShowcasePage() {
   const patientId = usePatientStore((s) => s.patientId);
   const { slides, isDemo, hasPatient } = usePatientPhotos(patientId);
   const { voices } = usePatientVoiceMemories(patientId);
+  const { videos } = usePatientVideoMemories(patientId);
 
   return (
     <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-5 px-4 pt-6 pb-12 md:px-6 md:pt-8 md:pb-16">
@@ -40,6 +43,12 @@ export function MemoryShowcasePage() {
       </header>
 
       <MemorySlideshow slides={slides} className="aspect-[16/10] w-full md:aspect-[16/9]" />
+
+      {videos.length > 0 && (
+        <div className="mx-auto w-full max-w-4xl pt-6">
+          <VideoGallery videos={videos} />
+        </div>
+      )}
 
       {voices.length > 0 && (
         <div className="mx-auto w-full max-w-4xl pt-6">

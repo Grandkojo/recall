@@ -100,7 +100,7 @@ async def query_memories(
         db.commit()
 
     from cognee.api.v1.search import SearchType
-    results = await cognee.search(SearchType.CHUNKS, query_text=q)
+    results = await cognee.search(q, query_type=SearchType.CHUNKS)
     
     from app.services.openai_service import synthesize_answer
     friendly_answer = synthesize_answer(q, results)

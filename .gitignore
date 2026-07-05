@@ -19,3 +19,4 @@ __pycache__/
 backend/migrate_graph.py
 backend/test_search_chunks.py
 backend/test_search.py
+backend/wipe_data.py

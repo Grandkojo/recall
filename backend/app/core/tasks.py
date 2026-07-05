@@ -38,7 +38,7 @@ async def process_media_upload(file_path: str, media_type: str, patient_id: int,
         if secure_url and secure_url != "text-only":
             memory_text += f"\n[MEDIA_URL: {secure_url} MEDIA_TYPE: {media_type}]"
             
-        await cognee.remember(memory_text)
+        await cognee.remember(memory_text, dataset_name=f"patient_{patient_id}")
         
         # Mark as ready
         db = SessionLocal()

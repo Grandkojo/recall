@@ -117,7 +117,7 @@ export function SlideshowIcon({ className = '' }: { className?: string }) {
 export function RichTextResponse({ text }: { text: string }) {
   if (!text) return null;
   
-  const regex = /\[MEDIA_URL:\s*(.+?)\s*MEDIA_TYPE:\s*(photo|video)\]/g;
+  const regex = /\[MEDIA_URL:\s*(.+?)\s*MEDIA_TYPE:\s*(photo|video|voice|audio)\]/g;
   const matches = [...text.matchAll(regex)];
   const cleanText = text.replace(regex, '').trim();
 
@@ -134,6 +134,9 @@ export function RichTextResponse({ text }: { text: string }) {
             }
             if (type === 'video') {
               return <video key={i} src={url} controls className="max-h-80 max-w-full rounded border border-line-strong object-contain shadow-sm" />;
+            }
+            if (type === 'voice' || type === 'audio') {
+              return <audio key={i} src={url} controls className="max-w-full" />;
             }
             return null;
           })}

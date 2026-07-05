@@ -60,7 +60,7 @@ async def add_memory(
         async def process_text_memory(text: str, m_id: int):
             from app.core.database import SessionLocal
             try:
-                await cognee.remember(text)
+                await cognee.remember(text, dataset_name=f"patient_{patient_id}")
                 
                 db_session = SessionLocal()
                 media_record = db_session.query(Media).filter(Media.id == m_id).first()
@@ -100,7 +100,7 @@ async def query_memories(
         db.commit()
 
     from cognee.api.v1.search import SearchType
-    results = await cognee.search(q, query_type=SearchType.CHUNKS)
+    results = await cognee.search(q, query_type=SearchType.CHUNKS, datasets=[f"patient_{patient_id}"])
     
     from app.services.openai_service import synthesize_answer
     friendly_answer = synthesize_answer(q, results)

@@ -6,6 +6,9 @@ from app.core.cognee_setup import setup_cognee
 setup_cognee()
 from app.core.database import engine
 from app.models import Base
+from dotenv import load_dotenv
+import os
+load_dotenv()
 
 Base.metadata.create_all(bind=engine)
 
@@ -17,6 +20,8 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:5173",
         "http://127.0.0.1:5173",
+        os.getenv("FRONTEND_URLS").split(","),
+        
     ],
     allow_credentials=True,
     allow_methods=["*"],

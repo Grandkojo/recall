@@ -1,11 +1,7 @@
 import { initializeApp, type FirebaseApp } from 'firebase/app';
 import { getAuth, type Auth } from 'firebase/auth';
 
-/**
- * Firebase is the sole authentication provider — the backend verifies the ID
- * tokens this SDK issues (backend/app/api/deps.py -> verify_id_token).
- * Config comes from VITE_FIREBASE_* env vars (see .env.example).
- */
+/** Sole auth provider; config from VITE_FIREBASE_* env vars, backend verifies its ID tokens. */
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,

@@ -5,11 +5,7 @@ import { SectionHeading } from '../section-heading';
 import { MemoryStackCanvas } from './memory-stack-canvas';
 import { MemoryStackAccordion } from './memory-stack-accordion';
 
-/**
- * The "Memory Stack" — our take on supermemory's isometric layer section.
- * A three.js exploded stack (glowing Graph layer) synced to a numbered
- * accordion; selecting a layer lifts + highlights the matching 3D plate.
- */
+/** Memory Stack: three.js exploded layers synced to a numbered accordion that lifts each plate. */
 export function MemoryStackSection() {
   const { stack } = landingContent;
   const graphIndex = Math.max(0, stack.layers.findIndex((l) => l.accent));

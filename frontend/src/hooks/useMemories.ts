@@ -5,6 +5,7 @@ import {
   queryMemories,
   uploadMemory,
   getPatientMemories,
+  getQueryHistory,
   type UploadMemoryInput,
 } from '../services/memories';
 import { queryKeys } from '../lib/queryKeys';
@@ -15,10 +16,7 @@ import type {
   Media,
 } from '../types';
 
-/**
- * Semantic "reminisce" search. Disabled until there's a patient and a non-empty
- * query, so it won't fire on an empty search box.
- */
+/** Semantic search; disabled until there's a patient and a non-empty query. */
 export function useQueryMemories(patientId: number, q: string) {
   const trimmed = q.trim();
   return useQuery<QueryMemoriesResponse>({
@@ -32,6 +30,15 @@ export function useGetPatientMemories(patientId: number) {
   return useQuery<Media[]>({
     queryKey: ['memories', 'patient', patientId],
     queryFn: () => getPatientMemories(patientId),
+    enabled: patientId > 0,
+    refetchInterval: 10000,
+  });
+}
+
+export function useQueryHistory(patientId: number) {
+  return useQuery<string[]>({
+    queryKey: ['memories', 'history', patientId],
+    queryFn: () => getQueryHistory(patientId),
     enabled: patientId > 0,
   });
 }

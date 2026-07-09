@@ -6,21 +6,21 @@ from app.models.media import Media
 import os
 import asyncio
 
-def run_async(coro):
-    """Helper to run async code inside sync celery tasks."""
-    loop = asyncio.get_event_loop()
-    return loop.run_until_complete(coro)
+from starlette.concurrency import run_in_threadpool
+import cognee
+from app.core.cognee_setup import setup_cognee
 
-@celery_app.task
-def process_media_upload(file_path: str, media_type: str, patient_id: int, media_id: int, caption: str = None):
+setup_cognee()
+
+async def process_media_upload(file_path: str, media_type: str, patient_id: int, media_id: int, caption: str = None):
     """
     Background task to process uploaded media.
     """
-    secure_url = upload_media(file_path)
+    secure_url = await run_in_threadpool(upload_media, file_path)
     
     transcript = ""
     if media_type in ["voice", "video"]:
-        transcript = transcribe_audio(file_path)
+        transcript = await run_in_threadpool(transcribe_audio, file_path)
         
     db = SessionLocal()
     media_record = db.query(Media).filter(Media.id == media_id).first()
@@ -31,27 +31,42 @@ def process_media_upload(file_path: str, media_type: str, patient_id: int, media
     db.close()
     
     try:
-        import cognee
         memory_text = caption or ""
         if transcript:
             memory_text += f"\nTranscript: {transcript}"
             
-        run_async(cognee.remember(memory_text))
+        if secure_url and secure_url != "text-only":
+            memory_text += f"\n[MEDIA_URL: {secure_url} MEDIA_TYPE: {media_type}]"
+            
+        await cognee.remember(memory_text, dataset_name=f"patient_{patient_id}")
+        
+        # Mark as ready
+        db = SessionLocal()
+        media_record = db.query(Media).filter(Media.id == media_id).first()
+        if media_record:
+            media_record.status = "ready"
+            db.commit()
+        db.close()
     except Exception as e:
         print("Cognee remember error:", e)
+        db = SessionLocal()
+        media_record = db.query(Media).filter(Media.id == media_id).first()
+        if media_record:
+            media_record.status = "failed"
+            db.commit()
+        db.close()
         
     if os.path.exists(file_path):
         os.remove(file_path)
         
     return {"media_id": media_id, "url": secure_url}
 
-@celery_app.task
-def run_cognee_improve():
+async def run_cognee_improve():
     """
     Background task to enrich the Cognee knowledge graph.
     """
     try:
         import cognee
-        run_async(cognee.improve())
+        await cognee.improve()
     except Exception as e:
         print("Cognee improve error:", e)

@@ -43,17 +43,17 @@ export function Footer() {
           <div>
             <Link to="/" className="flex items-center gap-2.5">
               <RecallMark />
-              <span className="text-xl font-bold tracking-tight text-ink">Recall</span>
+              <span className="text-xl font-semibold tracking-tight text-ink">Recall</span>
             </Link>
             <p className="mt-4 max-w-[30ch] text-sm font-medium text-muted">
-              A living memory for the people you love — built on Cognee
+              A living memory for the people you love, built on Cognee
             </p>
           </div>
 
           {/* Link columns */}
           {COLUMNS.map((col) => (
             <nav key={col.title} aria-label={col.title}>
-              <h3 className="text-[12px] font-bold uppercase tracking-[0.16em] text-ink">{col.title}</h3>
+              <h3 className="text-[12px] font-semibold uppercase tracking-[0.16em] text-ink">{col.title}</h3>
               <ul className="mt-4 space-y-3">
                 {col.links.map((link) => (
                   <li key={link.label}>
@@ -72,7 +72,7 @@ export function Footer() {
 
         <div className="flex flex-col gap-3 border-t border-line py-6 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-[12px] font-semibold uppercase tracking-[0.14em] text-muted">
-            © 2026 Recall — Made for the WeMakeDevs × Cognee Hackathon
+            © 2026 Recall, made for the WeMakeDevs × Cognee Hackathon
           </p>
           <p className="text-[12px] font-semibold uppercase tracking-[0.14em] text-muted">
             Not a medical device

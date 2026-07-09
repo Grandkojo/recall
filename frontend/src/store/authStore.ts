@@ -2,12 +2,8 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { AuthUser } from '../types';
 
-/**
- * 'loading'         — Firebase is still resolving the persisted session
- * 'authenticated'   — Firebase user present AND synced with the backend
- * 'unauthenticated' — no Firebase user
- */
-export type AuthStatus = 'loading' | 'authenticated' | 'unauthenticated';
+/** Auth lifecycle: loading | authenticated (synced) | unauthenticated | needs_role. */
+export type AuthStatus = 'loading' | 'authenticated' | 'unauthenticated' | 'needs_role';
 
 interface AuthState {
   /** local backend profile (id/role) merged from POST /api/auth/sync */
@@ -18,11 +14,7 @@ interface AuthState {
   clear: () => void;
 }
 
-/**
- * The Firebase SDK is the source of truth for the *session* (it persists the
- * ID token itself). This store only caches the backend profile so the role is
- * available synchronously on reload; AuthProvider re-syncs to keep it fresh.
- */
+/** Caches the backend profile for sync reads on reload; Firebase owns the session. */
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({

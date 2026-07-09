@@ -10,8 +10,8 @@
   --color-primary-dark: #195EA8;
   --color-primary-soft: #E7F1FB;
 
-  /* Ink & text — high contrast for a bold, engineered feel */
-  --color-ink: #0A1626;
+  /* Ink & text — softer navy, easier on the eyes */
+  --color-ink: #1B2B47;
   --color-ink-soft: #233A52;
   --color-body: #45607A;
   --color-muted: #6F88A0;
@@ -30,6 +30,8 @@
   --color-teal: #2BBFCF;
   --color-amber: #E8A55A;
   --color-error: #D94F4F;
+  --color-success: #2E9E6B;
+  --color-success-soft: #E7F4EC;
 
   /* Type — Space Grotesk everywhere */
   --font-sans: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, sans-serif;
@@ -38,7 +40,6 @@
   --animate-rise: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
   --animate-blink: blink 1.1s steps(1, end) infinite;
   --animate-marquee: marquee 28s linear infinite;
-  --animate-brain-cycle: brain-cycle 8s ease-in-out infinite;
 }
 
 @keyframes rise {
@@ -53,10 +54,9 @@
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
 }
-@keyframes brain-cycle {
-  0%, 18%   { opacity: 1; }  /* real brain */
-  40%, 60%  { opacity: 0; }  /* ASCII */
-  82%, 100% { opacity: 1; }  /* back to brain */
+@keyframes isofloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
 }
 
 /* ── Base ─────────────────────────────────────────────────────────────── */
@@ -72,10 +72,12 @@ html {
 body {
   margin: 0;
   font-family: var(--font-sans);
-  font-weight: 500;
+  font-weight: 400;
   background: var(--color-canvas);
   color: var(--color-body);
-  line-height: 1.55;
+
+
+  line-height: 2;
 }
 
 #root { min-height: 100svh; }

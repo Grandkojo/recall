@@ -5,6 +5,8 @@ import { Container } from '../../components/layout/Container';
 import { btnCls } from '../../components/ui';
 import { landingContent } from '../../lib/landing-content';
 import { HeroVisual } from './hero-visual';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { ArrowRight01Icon } from '@hugeicons/core-free-icons';
 
 export function HeroSection() {
   const { hero } = landingContent;
@@ -47,11 +49,11 @@ export function HeroSection() {
               {hero.eyebrow}
             </span>
 
-            <h1 className="mt-5 text-[clamp(2.3rem,4.4vw,3.6rem)] font-bold leading-[1.05] tracking-[-0.025em] text-ink">
+            <h1 className="mt-5 text-[clamp(2.3rem,4.4vw,3.6rem)] font-semibold leading-[1.05] tracking-[-0.025em] text-ink">
               {hero.titleLead} <span className="text-primary">{hero.titleAccent}</span> {hero.titleTail}
             </h1>
 
-            <p className="mt-5 max-w-[46ch] text-sm font-medium leading-relaxed text-body">
+            <p className="mt-5 max-w-[46ch] text-sm font-normal leading-relaxed text-body">
               {hero.subtitle}
             </p>
 
@@ -61,21 +63,9 @@ export function HeroSection() {
               </Link>
               <a href="#how-it-works" className={btnCls('secondary', 'lg', 'justify-center')}>
                 {hero.secondaryCta}
-                <span aria-hidden="true">→</span>
+                <HugeiconsIcon icon={ArrowRight01Icon} size={18} color="currentColor" strokeWidth={2} />
               </a>
             </div>
-
-            <ul className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
-              {hero.trust.map((item) => (
-                <li
-                  key={item}
-                  className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted"
-                >
-                  <span className="h-1.5 w-1.5 bg-primary" />
-                  {item}
-                </li>
-              ))}
-            </ul>
           </div>
 
           {/* Visual column */}

@@ -2,11 +2,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '../store/authStore';
 import { logout as firebaseLogout } from '../services/auth';
 
-/**
- * Convenience view over auth state, mirroring the backend's role permissions:
- *  - canUpload: CAREGIVER or FAMILY_CONTRIBUTOR  (POST /api/memories/)
- *  - canManage: CAREGIVER only                   (enrich + delete)
- */
+/** Auth-state view with role perms: canUpload (CAREGIVER/FAMILY), canManage (CAREGIVER). */
 export function useAuth() {
   const qc = useQueryClient();
   const user = useAuthStore((s) => s.user);

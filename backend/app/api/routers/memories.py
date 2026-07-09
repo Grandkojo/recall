@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, UploadFile, File, Form, HTTPException
+from fastapi import APIRouter, Depends, UploadFile, File, Form, HTTPException, BackgroundTasks
 from sqlalchemy.orm import Session
 from app.api.deps import get_db, require_role, get_current_user
 from app.core.tasks import process_media_upload, run_cognee_improve
@@ -14,6 +14,7 @@ os.makedirs("temp_uploads", exist_ok=True)
 
 @router.post("/")
 async def add_memory(
+    background_tasks: BackgroundTasks,
     patient_id: int = Form(...),
     media_type: str = Form(...), # photo, voice, video, text
     caption: str = Form(None),
@@ -24,6 +25,15 @@ async def add_memory(
     """
     Upload a memory for a patient.
     """
+    if file:
+        max_size = 0
+        if media_type == 'photo': max_size = 5 * 1024 * 1024
+        elif media_type == 'voice': max_size = 10 * 1024 * 1024
+        elif media_type == 'video': max_size = 50 * 1024 * 1024
+        
+        if max_size > 0 and file.size and file.size > max_size:
+            raise HTTPException(status_code=400, detail=f"File too large for {media_type}")
+            
     patient = db.query(Patient).filter(Patient.id == patient_id).first()
     if not patient:
         raise HTTPException(status_code=404, detail="Patient not found")
@@ -44,11 +54,30 @@ async def add_memory(
         with open(temp_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
             
-        process_media_upload.delay(temp_path, media_type, patient_id, db_media.id, caption)
+        background_tasks.add_task(process_media_upload, temp_path, media_type, patient_id, db_media.id, caption)
     else:
         # text only memory, run asynchronously
-        import asyncio
-        asyncio.create_task(cognee.remember(caption or ""))
+        async def process_text_memory(text: str, m_id: int):
+            from app.core.database import SessionLocal
+            try:
+                await cognee.remember(text, dataset_name=f"patient_{patient_id}")
+                
+                db_session = SessionLocal()
+                media_record = db_session.query(Media).filter(Media.id == m_id).first()
+                if media_record:
+                    media_record.status = "ready"
+                    db_session.commit()
+                db_session.close()
+            except Exception as e:
+                print("Cognee remember error:", e)
+                db_session = SessionLocal()
+                media_record = db_session.query(Media).filter(Media.id == m_id).first()
+                if media_record:
+                    media_record.status = "failed"
+                    db_session.commit()
+                db_session.close()
+
+        background_tasks.add_task(process_text_memory, caption or "", db_media.id)
 
     return {"message": "Memory upload initiated", "media_id": db_media.id}
 
@@ -56,13 +85,50 @@ async def add_memory(
 async def query_memories(
     q: str, 
     patient_id: int,
+    db: Session = Depends(get_db),
     user: dict = Depends(get_current_user)
 ):
     """
     Search/Reminisce interface for patients and caregivers.
     """
-    results = await cognee.recall(q)
-    return {"query": q, "results": results}
+    # Save search history
+    from app.models.search_history import SearchHistory
+    latest = db.query(SearchHistory).filter(SearchHistory.patient_id == patient_id).order_by(SearchHistory.created_at.desc()).first()
+    if not latest or latest.query != q:
+        history = SearchHistory(patient_id=patient_id, query=q)
+        db.add(history)
+        db.commit()
+
+    from cognee.api.v1.search import SearchType
+    results = await cognee.search(q, query_type=SearchType.CHUNKS, datasets=[f"patient_{patient_id}"])
+    
+    from app.services.openai_service import synthesize_answer
+    friendly_answer = synthesize_answer(q, results)
+    
+    return {"query": q, "results": results, "answer": friendly_answer}
+
+@router.get("/history/{patient_id}")
+async def get_query_history(
+    patient_id: int,
+    db: Session = Depends(get_db),
+    user: dict = Depends(get_current_user)
+):
+    """
+    Get recent unique queries for the patient.
+    """
+    from app.models.search_history import SearchHistory
+    history = db.query(SearchHistory).filter(SearchHistory.patient_id == patient_id).order_by(SearchHistory.created_at.desc()).limit(20).all()
+    
+    seen = set()
+    unique_queries = []
+    for h in history:
+        if h.query not in seen:
+            unique_queries.append(h.query)
+            seen.add(h.query)
+        if len(unique_queries) >= 10:
+            break
+            
+    return unique_queries
 
 @router.get("/patient/{patient_id}")
 async def get_patient_memories(
@@ -78,12 +144,13 @@ async def get_patient_memories(
 
 @router.post("/enrich")
 async def enrich_graph(
+    background_tasks: BackgroundTasks,
     user: dict = Depends(require_role(["CAREGIVER"]))
 ):
     """
     Trigger a background graph enrichment job.
     """
-    run_cognee_improve.delay()
+    background_tasks.add_task(run_cognee_improve)
     return {"message": "Graph enrichment task started"}
 
 @router.delete("/{media_id}")

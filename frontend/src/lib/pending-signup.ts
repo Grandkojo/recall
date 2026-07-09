@@ -1,13 +1,6 @@
 import type { SignupRole } from '../types';
 
-/**
- * Bridges the signup form to the AuthProvider's sync step.
- *
- * Firebase's onAuthStateChanged fires as soon as an account is created, and the
- * provider is the single place that calls POST /api/auth/sync (so we never
- * double-create a user). The form stashes the chosen role/name here just before
- * creating the account; the provider consumes it on the resulting auth change.
- */
+/** Stashes chosen role/name so AuthProvider can sync it on the next auth change. */
 interface PendingSignup {
   role: SignupRole;
   fullName: string;

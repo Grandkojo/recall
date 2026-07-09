@@ -20,7 +20,9 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:5173",
         "http://127.0.0.1:5173",
-        os.getenv("FRONTEND_URLS").split(","),
+        os.getenv("FRONTEND_URL1"),
+        os.getenv("FRONTEND_URL2"),
+        os.getenv("FRONTEND_URL3"),
         
     ],
     allow_credentials=True,
